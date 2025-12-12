@@ -1,0 +1,32 @@
+Graph analysis summary for different PAGE_WINDOW values
+======================================================
+
+PAGE_WINDOW = 0
+Edges CSV   = Gadariya_edges_w0.csv
+Number of nodes       : 57
+Number of edges       : 397
+Average degree        : 13.930
+Max degree            : 56
+Nodes with max degree : راوی (صفدر ٹھیلا قصہ), راوی (گولو/طنبورے کا قصہ), پروفیسر (روما والا راوی)
+Isolated nodes (deg=0): 0
+
+PAGE_WINDOW = 5
+Edges CSV   = Gadariya_edges_w5.csv
+Number of nodes       : 57
+Number of edges       : 750
+Average degree        : 26.316
+Max degree            : 56
+Nodes with max degree : راوی (صفدر ٹھیلا قصہ), راوی (گولو/طنبورے کا قصہ), پروفیسر (روما والا راوی)
+Isolated nodes (deg=0): 0
+
+PAGE_WINDOW = 10
+Edges CSV   = Gadariya_edges_w10.csv
+Number of nodes       : 57
+Number of edges       : 855
+Average degree        : 30.000
+Max degree            : 56
+Nodes with max degree : راوی (صفدر ٹھیلا قصہ), راوی (گولو/طنبورے کا قصہ), نظر, پروفیسر (روما والا راوی)
+Isolated nodes (deg=0): 0
+
+Note: Nodes are the same across all PAGE_WINDOW runs, but edges
+      become denser as PAGE_WINDOW increases.

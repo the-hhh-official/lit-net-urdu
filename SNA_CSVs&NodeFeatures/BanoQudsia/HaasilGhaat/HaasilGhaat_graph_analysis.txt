@@ -1,0 +1,32 @@
+Graph analysis summary for different PAGE_WINDOW values
+======================================================
+
+PAGE_WINDOW = 0
+Edges CSV   = HaasilGhaat_edges_w0.csv
+Number of nodes       : 15
+Number of edges       : 66
+Average degree        : 8.800
+Max degree            : 13
+Nodes with max degree : ارجمند
+Isolated nodes (deg=0): 0
+
+PAGE_WINDOW = 5
+Edges CSV   = HaasilGhaat_edges_w5.csv
+Number of nodes       : 15
+Number of edges       : 89
+Average degree        : 11.867
+Max degree            : 14
+Nodes with max degree : ارجمند, بلال
+Isolated nodes (deg=0): 0
+
+PAGE_WINDOW = 10
+Edges CSV   = HaasilGhaat_edges_w10.csv
+Number of nodes       : 15
+Number of edges       : 92
+Average degree        : 12.267
+Max degree            : 14
+Nodes with max degree : ارجمند, اصغری, بلال, شمار
+Isolated nodes (deg=0): 0
+
+Note: Nodes are the same across all PAGE_WINDOW runs, but edges
+      become denser as PAGE_WINDOW increases.

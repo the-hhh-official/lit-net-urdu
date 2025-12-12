@@ -1,0 +1,115 @@
+Character,Gender,TitleOrClass,Role
+اسد,Male,گوریلا مجاہد,Protagonist
+اسد کا باپ,Male,والد,Support
+اسد کی ماں,Female,ماں,Minor
+اسد کا چاچا,Male,رشتہ دار مرد,Minor
+اسد کی پھوپھی,Female,رشتہ دار عورت,Minor
+حسین بی بی,Female,گھر کی بزرگ,Minor
+بوڑھی خادمہ,Female,خادمہ,Minor
+یاسمین,Female,دیہاتی لڑکی,Support
+ولی,Male,چوکیدار,Support
+گاؤں کا چوکیدار,Male,چوکیدار,Minor
+میر حسن,Male,دیہاتی بزرگ,Support
+احمد علی,Male,دیہاتی نوجوان,Support
+نظام الدین,Male,دیہاتی نوجوان,Support
+حکیم,Male,حکیم,Support
+بیوہ,Female,بیوہ,Support
+بیوہ کے بیٹے,Male,دیہاتی لڑکے,Minor
+حمنہ,Female,لڑکی,Minor
+شاہ رخ,Male,فارسٹر,Support
+شاہ رخ کی منگیتر,Female,منگیتر,Minor
+عالم شواری,Male,ریاستی افسر,Minor
+ریاض,Male,طالب علم,Support
+ریاض کی ماں,Female,ماں,Support
+کسان مزدور لڑکی,Female,مزدور لڑکی,Minor
+اساتذہ کالج,Unknown,اساتذہ,Minor
+پرنسپل کالج,Male,پرنسپل,Minor
+ڈاکٹر کالج,Male,ڈاکٹر,Minor
+پیتھالوجسٹ,Male,ڈاکٹر,Minor
+چاچا کا دوست,Male,دکاندار,Minor
+مہمان لڑکی جنگل,Female,لڑکی,Minor
+اسسٹنٹ ڈسٹرکٹ انسپکٹر سکولز,Male,تعلیمی افسر,Minor
+ملائی بیگم,Female,بیگم,Minor
+تھانیدار کلیم اللہ خان,Male,پولیس افسر,Antagonist
+ہیڈ کانسٹیبل,Male,پولیس اہلکار,Minor
+لال خاں,Male,سپاہی,Minor
+سپاہی کرم دین,Male,سپاہی,Support
+ولی محمد حسین دکاندار,Male,دکاندار,Minor
+ذوالفقار,Male,ماسٹر وکیل,Support
+کریم ملازم,Male,ملازم,Minor
+روشن,Female,گھر کی عورت,Minor
+بوڑھا خاکسار,Male,خاکسار کارکن,Minor
+ڈاکٹر غوری,Male,ڈاکٹر,Minor
+جان محمد,Male,مزدور,Minor
+پھوپھا نواز,Male,رشتہ دار مرد,Minor
+خوشی محمد,Male,جنگل مزدور,Support
+جمیلہ,Female,دودھ والی,Minor
+رحیم,Male,مزارع,Minor
+مریم,Female,کسان عورت,Minor
+ماسٹر پرائمری سکول,Male,ماسٹر,Minor
+غلام,Male,مزدور ساتھی,Support
+شیر,Unknown,درندہ,Antagonist
+امیر خان,Male,سمگلر گائیڈ,Support
+سلطان شاہ,Male,سردار,Support
+سلطان شاہ کا نوکر,Male,نوکر,Minor
+سبز چہرہ درویش,Male,درویش,Minor
+چار کوس کی عورت,Female,دیہاتی عورت,Minor
+چار کوس کی عورت کا شوہر,Male,دیہاتی مرد,Minor
+عبداللہ (عورت کا بیٹا),Male,بچہ,Minor
+جھنڈیاں کی عورت,Female,دیہاتی عورت,Support
+اسمعیل دکاندار,Male,دکاندار,Minor
+گاؤں کا لڑکا,Male,بچہ,Minor
+غلام کا گھرانہ,Unknown,خاندان,Minor
+سپاہی (ٹرک ڈرائیور),Male,سپاہی,Minor
+زخمی فوجی,Male,سپاہی,Minor
+دین,Male,تنظیمی کارکن,Support
+دین کے ساتھی,Unknown,کارکن گروپ,Minor
+علی (مرنے والا),Male,تنظیمی کارکن,Minor
+مونچھوں والا سپاہی,Male,سپاہی,Minor
+حوالدار گل شیر,Male,حوالدار,Support
+فوجی اسپیشلسٹ (نقشہ والا),Male,فوجی افسر,Support
+بچہ (چار کوس گھر),Male,بچہ,Minor
+چار کوس کے لوگ,Unknown,دیہاتی لوگ,Minor
+انٹیلی جنس کا افسر (ذوالفقار کا ماتحت),Male,خفیہ افسر,Minor
+عمر,Male,مجاہد,Support
+گروپ لیڈر (عمر کے گروپ کا),Male,گروپ لیڈر,Support
+سپاہی (نیا چہرہ),Male,سپاہی,Minor
+چھ آدمی (گروپ کے),Male,گروپ ارکان,Minor
+چوتھا آدمی (گھڑی چیک کرنے والا),Male,فوجی,Minor
+بیٹری والا فوجی,Male,فوجی,Support
+بارود لگانے والا فوجی,Male,فوجی,Support
+ابزرویشن والا فوجی,Male,فوجی,Support
+فوجی (مونچھوں والا),Male,فوجی,Minor
+پولیس/فوجی چوکی,Unknown,فوجی یونٹ,Minor
+لنگری کا جبار,Male,تنظیمی کارکن,Support
+جبار کی بیوی,Female,گھر کی عورت,Minor
+گھڑی والے کسان,Male,کسان,Minor
+کسان کی بیوی,Female,کسان عورت,Minor
+جنگل کا مزدور,Male,جنگل مزدور,Minor
+مزدور کی بیوی,Female,مزدور عورت,Minor
+بچے (مظلومی گاؤں),Unknown,بچے,Minor
+بے دخل قبیلہ (ڈی پی),Unknown,ڈی پی قبیلہ,Minor
+کشمیری میزبان,Male,کشمیری مزدور,Minor
+کشمیری کا خاندان,Unknown,خاندان,Minor
+انار گل,Female,عورت,Minor
+پرانا شکاری,Male,شکاری,Minor
+جنگلات کے افسران,Unknown,جنگلات افسر,Minor
+ذوالفقار کے آدمی,Male,ساتھی گروپ,Minor
+مولوی سردار شاہ,Male,مولوی,Minor
+مولوی عنایت شاہ,Male,مولوی,Minor
+علی محمد بریلوی,Male,مولوی,Minor
+مسجد کے درویش,Male,درویش,Minor
+صوفی فضل کریم,Male,صوفی,Minor
+چراغ,Male,محلے دار مرد,Minor
+چراغ کی بیٹی,Female,لڑکی,Minor
+چراغ کی بیٹی کا خاوند (پٹواری),Male,پٹواری,Minor
+مانو,Unknown,دوست,Minor
+ساور,Unknown,دوست,Minor
+شجر,Unknown,دوست,Minor
+بشیر,Male,دوست,Minor
+بیر,Unknown,دوست,Minor
+رون,Unknown,دوست,Minor
+رشید,Male,دوست,Minor
+میکس,Unknown,دوست,Minor
+تندور والی کی لڑکی,Female,تندور مزدور,Minor
+ناظم,Male,دوست,Minor

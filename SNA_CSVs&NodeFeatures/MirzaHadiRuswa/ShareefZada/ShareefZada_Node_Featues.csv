@@ -1,0 +1,119 @@
+Character,Gender,TitleOrClass,Role
+مرزا عابد حسین,Male,Zamindar-Scholar,Protagonist
+رقیہ بیگم,Female,Begum,Support
+مرزا باقر حسین,Male,Student,Support
+والدہ عابد حسین,Female,Household Elder,Minor
+ماما,Female,Nurse/Servant,Minor
+دادا جان,Male,Ancestor,Minor
+نانا جان,Male,Ancestor,Minor
+دادی اماں,Female,Ancestor,Minor
+بڑے ماموں,Male,Maternal Uncle,Minor
+نواب محرم الدولہ بہادر,Male,Nawab,Minor
+نواب محمد عباس,Male,Nawab,Minor
+نواب شہنشاہ مرزا,Male,Nawab,Minor
+سلطان مرزا,Male,Noble,Minor
+میاں حسین علی,Male,Householder,Minor
+بیوی حسین علی,Female,Housewife,Minor
+ہمسائی,Female,Neighbor,Minor
+فتو کنجڑا,Male,Greengrocer,Minor
+حکیم صاحب (بجھوائی ٹولہ),Male,Hakim,Minor
+مولوی صاحب (محلے والے),Male,Religious Scholar,Minor
+مولوی صاحب (گھر کے استاد),Male,Religious Teacher,Minor
+ہیڈ ماسٹر,Male,Schoolmaster,Minor
+بلدیو مستری,Male,Artisan (Mason),Support
+مادھو,Male,Mechanic/Worker,Support
+پلاس لوہار,Male,Blacksmith,Minor
+شنکر,Male,Laborer,Minor
+ماتادین بڑھئی,Male,Carpenter,Minor
+نوروز علی,Male,Villager,Minor
+رضا حسین,Male,Relative,Minor
+منشی نبی بخش,Male,Draftsman,Minor
+منشی الٰہ بخش,Male,Clerk,Minor
+سید جعفر حسین,Male,Landowner,Minor
+میر کاظم علی,Male,Gentleman,Minor
+دیبی پرشاد,Male,Hindu Gentleman,Minor
+ماسٹر جانکی پرشاد,Male,Teacher,Minor
+رام چرن,Male,Servant,Minor
+میر صاحب,Male,Friend/Correspondent,Support
+رجسٹرار پنجاب یونیورسٹی,Male,University Official,Minor
+انجینئر صاحب,Male,Engineer,Support
+ایگزیکٹو انجینئر صاحب,Male,Engineer,Minor
+صاحب سپرنٹنڈنٹ انجینئر,Male,Senior Engineer,Minor
+رئیسِ ضلع کے بنگلے کا انجینئر,Male,Engineer,Minor
+ہیڈ کلرک,Male,Clerk,Minor
+سکنڈ کلرک,Male,Clerk,Minor
+ٹھیکیدار حسین,Male,Contractor,Minor
+شیو بہاری ٹھیکیدار,Male,Contractor,Minor
+رام دین ٹھیکیدار,Male,Contractor,Minor
+جج صاحب,Male,Judge,Minor
+صاحب سیشن جج,Male,Judge,Minor
+تحصیلدار صاحب,Male,Revenue Officer,Minor
+پنڈت جانکی پرشاد (امیـدار پولیس),Male,Police Candidate,Minor
+حوالدار,Male,Policeman,Minor
+چراسی,Male,Peon,Minor
+چوکیدار,Male,Watchman,Minor
+کئی چمار,Male,Low-Caste Laborer,Minor
+مزدور (بنّیا/کھیت والے),Unknown,Laborers (Collective),Minor
+ذمی (سجن پورہ کے لوگ),Unknown,Tenants (Collective),Minor
+رئیس موضع سجن پورہ کا خاندان,Unknown,Landowning Family,Minor
+کارندہ سجن پورہ,Male,Estate Agent,Minor
+فدوی میاں کے اجداد,Unknown,Ancestors,Minor
+شیخ قربان علی,Male,Zamindar,Minor
+شیخ احمد,Male,Guardian/Swindler,Antagonist
+ولایت علی خاں,Male,Broker/Forger,Antagonist
+ماندھاتا,Male,Rajput Claimant,Antagonist
+فردی میاں,Male,Sharif Landholder,Support
+شیور تن,Male,Estate Manager,Antagonist
+نثار علی,Male,Landholder’s Son,Minor
+احمد حسن,Male,Landholder’s Son,Minor
+سکینہ,Female,Orphan/Young Woman,Support
+سکینہ کا خالو,Male,Relative/Guardian,Support
+زوجہ ثانی (خالہ کی دوسری بیوی),Female,Housewife,Minor
+واحد حسین,Male,Gentleman,Minor
+صاحب واحد حسین کے لڑکے,Male,Gentleman’s Son,Minor
+ذکیہ بیگم,Female,Mother-in-law,Minor
+مرزا فدا حسین,Male,Zamindar,Support
+سکینہ بیگم (مرزا فدا حسین کی بیوی),Female,Housewife,Minor
+ذکر,Male,Villager/Worker,Minor
+ہر مزی,Male,Villager/Worker,Minor
+مکّا,Male,Peasant,Support
+مکّا کی جورو,Female,Peasant Woman,Minor
+متّا,Male,Peasant,Minor
+متّا کی جورو,Female,Peasant Woman,Minor
+نادر,Male,Child,Support
+بھٹیاری,Female,Innkeeper,Minor
+مہکولال,Male,Servant/Helper,Minor
+چھٹن,Male,Villager/Helper,Minor
+علی حسین,Male,Villager,Minor
+محسن علی,Male,Supporter,Minor
+سوزخواں,Male,Religious Reciter,Minor
+حدیث خواں,Male,Religious Reciter,Minor
+مرثیہ خواں,Male,Religious Reciter,Minor
+مرزا حمید حسین,Male,Poet,Minor
+تصدق حسین,Male,Poet/Friend,Minor
+وحشت,Male,Poet,Minor
+قیس,Male,Legendary Lover (Literary),Minor
+لیلی,Female,Legendary Lover (Literary),Minor
+رزلین,Female,Land Grantee,Minor
+دیہائی رنڈیاں,Female,Courtesans (Collective),Minor
+کفایت علی شاہ,Male,Faqir,Minor
+کفایت علی شاہ,Male,Faqir,Minor
+نور سیمی,Female,Young Bride,Minor
+داماد نور سیمی,Male,Groom,Minor
+حسین الدین,Male,Official’s Son,Minor
+والدہ حسین الدین,Female,Housewife,Minor
+ہدایت حسین,Male,Court Official,Minor
+مہادیو پرشاد,Male,Admirer/Reader,Minor
+مولوی ریاض الدین,Male,Religious Scholar,Minor
+مولوی ظہور الدین,Male,Religious Scholar,Minor
+میر احسان علی,Male,Scholar of Mathematics,Minor
+مہادیو پرشاد,Male,Admirer/Reader,Minor
+ابوالخیر,Male,Religious Scholar,Minor
+سرفراز حسین,Male,Petitioner,Minor
+ساحر (نواب احمد حسین خاں),Male,Nawab-Poet,Minor
+عبدالحسینین,Male,Friend in Europe,Minor
+عبداللہ (گمنام کاتب),Male,Anonymous Critic,Minor
+مولوی صلاح الدین,Male,Scholar (BA),Minor
+بشیر الدین احمد,Male,Scholar (MA),Minor
+کفایت علی شاہ,Male,Faqir,Minor
+رسوا,Male,Writer,Narrator

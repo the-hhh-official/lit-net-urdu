@@ -1,0 +1,40 @@
+Character,Gender,TitleOrClass,Role
+بوجی,Female,Household Elder,Support
+سبطین,Male,Professor,Support
+گلشن,Female,Housemaid/Helper,Support
+فیاض خان,Male,Sahib,Protagonist
+رفیا,Male,Shop-Hand/Gupshup Source,Support
+علن,Male,Shopkeeper,Support
+کالے خاں,Male,Pathan/Worker,Support
+شیرو,Male,Laborer/Fighter,Support
+مزمل,Male,Student/Worker,Support
+اجمل,Male,Student/Worker,Support
+فضل حق وکیل,Male,Lawyer,Support
+ملن,Male,Worker,Minor
+حق صاحب,Male,Sahib/Local Notable,Support
+نمبردار صاحب,Male,Numberdar,Support
+نمبردارنی,Female,Numberdarni,Minor
+حمید ڈاکیہ,Male,Postman,Minor
+مٹھوا,Male,Child/Helper,Minor
+لالہ رگھو بر دیال,Male,Lala/Hindu Shopkeeper,Minor
+رشید,Male,Husband of افسری,Minor
+افسری فاطمہ,Female,Tawaif/Performer,Major-Support
+نوابن,Female,Nawab Class,Minor
+بلو,Male,Servant/Helper,Minor
+فرحت,Female,Household Woman,Minor
+ڈپٹی صاحب,Male,Deputy/Officer,Minor
+خلیفہ,Male,Hajam/Barber-Social Node,Support
+خان صاحب,Male,Sahib,Minor
+سکھ اسٹیشن ماسٹر,Male,Station Master,Minor
+دلی والی 1,Female,Refugee Woman,Minor
+دلی والی 2,Female,Refugee Woman,Minor
+دلی کباب والا,Male,Food Seller,Minor
+مولانا محمد علی,Male,Historical Figure,Inactive
+مصطفی کمال,Male,Historical Figure,Inactive
+علامہ اقبال,Male,Poet/Philosopher,Inactive
+قائد اعظم,Male,Political Leader,Inactive
+گاما,Male,Wrestler,Inactive
+بخت خاں,Male,Historical Figure,Inactive
+بہادر شاہ ظفر,Male,Last Mughal,Inactive
+پیر جی نکڑ شاہ,Male,Saint/Fakir,Inactive
+سلمان فارسی,Male,Religious Figure,Inactive

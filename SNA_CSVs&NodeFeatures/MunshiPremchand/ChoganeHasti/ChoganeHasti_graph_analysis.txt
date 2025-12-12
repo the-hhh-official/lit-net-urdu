@@ -1,0 +1,32 @@
+Graph analysis summary for different PAGE_WINDOW values
+======================================================
+
+PAGE_WINDOW = 0
+Edges CSV   = ChoganeHasti_edges_w0.csv
+Number of nodes       : 59
+Number of edges       : 533
+Average degree        : 18.068
+Max degree            : 55
+Nodes with max degree : جان سیوک
+Isolated nodes (deg=0): 0
+
+PAGE_WINDOW = 5
+Edges CSV   = ChoganeHasti_edges_w5.csv
+Number of nodes       : 59
+Number of edges       : 1024
+Average degree        : 34.712
+Max degree            : 58
+Nodes with max degree : جان سیوک
+Isolated nodes (deg=0): 0
+
+PAGE_WINDOW = 10
+Edges CSV   = ChoganeHasti_edges_w10.csv
+Number of nodes       : 59
+Number of edges       : 1113
+Average degree        : 37.729
+Max degree            : 58
+Nodes with max degree : جان سیوک, صوفیہ سیوک, مسز جان سیوک
+Isolated nodes (deg=0): 0
+
+Note: Nodes are the same across all PAGE_WINDOW runs, but edges
+      become denser as PAGE_WINDOW increases.

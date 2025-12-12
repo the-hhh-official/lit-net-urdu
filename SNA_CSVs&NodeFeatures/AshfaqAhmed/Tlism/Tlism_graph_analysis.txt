@@ -1,0 +1,32 @@
+Graph analysis summary for different PAGE_WINDOW values
+======================================================
+
+PAGE_WINDOW = 0
+Edges CSV   = Tlism_edges_w0.csv
+Number of nodes       : 45
+Number of edges       : 101
+Average degree        : 4.489
+Max degree            : 25
+Nodes with max degree : داریا
+Isolated nodes (deg=0): 0
+
+PAGE_WINDOW = 5
+Edges CSV   = Tlism_edges_w5.csv
+Number of nodes       : 45
+Number of edges       : 280
+Average degree        : 12.444
+Max degree            : 41
+Nodes with max degree : داریا
+Isolated nodes (deg=0): 0
+
+PAGE_WINDOW = 10
+Edges CSV   = Tlism_edges_w10.csv
+Number of nodes       : 45
+Number of edges       : 354
+Average degree        : 15.733
+Max degree            : 44
+Nodes with max degree : داریا
+Isolated nodes (deg=0): 0
+
+Note: Nodes are the same across all PAGE_WINDOW runs, but edges
+      become denser as PAGE_WINDOW increases.

@@ -1,0 +1,32 @@
+Graph analysis summary for different PAGE_WINDOW values
+======================================================
+
+PAGE_WINDOW = 0
+Edges CSV   = QilaJungee_edges_w0.csv
+Number of nodes       : 20
+Number of edges       : 48
+Average degree        : 4.800
+Max degree            : 11
+Nodes with max degree : عبدالحمید جان واکر سلمان الفارسی, مرتضیٰ بیگ
+Isolated nodes (deg=0): 1
+
+PAGE_WINDOW = 5
+Edges CSV   = QilaJungee_edges_w5.csv
+Number of nodes       : 20
+Number of edges       : 115
+Average degree        : 11.500
+Max degree            : 19
+Nodes with max degree : عبدالحمید جان واکر سلمان الفارسی
+Isolated nodes (deg=0): 0
+
+PAGE_WINDOW = 10
+Edges CSV   = QilaJungee_edges_w10.csv
+Number of nodes       : 20
+Number of edges       : 132
+Average degree        : 13.200
+Max degree            : 19
+Nodes with max degree : ابو طالب چی چی, اللہ بخش, عبدالحمید جان واکر سلمان الفارسی, گل شیر ولی
+Isolated nodes (deg=0): 0
+
+Note: Nodes are the same across all PAGE_WINDOW runs, but edges
+      become denser as PAGE_WINDOW increases.

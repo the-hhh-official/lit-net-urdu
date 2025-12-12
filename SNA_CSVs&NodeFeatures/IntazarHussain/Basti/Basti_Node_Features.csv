@@ -1,0 +1,169 @@
+Character,Gender,TitleOrClass,Role
+ذاکر,Male,Professor / Intellectual,Narrator
+صابرہ,Female,Middle-class Woman,Protagonist
+سلامت,Male,Friend / Political Activist,Support
+اجمل,Male,Friend / Youth,Support
+زوار,Male,Friend / Civil Servant,Support
+ادیب/نقاد عرفان,Male,Writer / Critic,Support
+شیراز کا بیرا عبدل,Male,Café Waiter,Support
+اخباری دوست (خواجہ صاحب),Male,Elder Intellectual,Support
+ابا جان,Male,Religious Elder / Father,Support
+بی اماں,Female,Household Elder,Support
+امی,Female,Mother,Support
+دادا ابا,Male,Patriarch / Grandfather,Support
+خان بہادر تایا,Male,Respected Elder / Landlord,Support
+شریفن,Female,Servant / Ayah,Support
+بتول,Female,Family Woman,Support
+طاہرہ,Female,Married Woman,Support
+زیبا,Female,Young Woman,Support
+سوہن,Male,Neighbour / Villager,Minor
+لالہ مٹھن لال,Male,Hindu Merchant,Support
+لالہ ہردیال,Male,Hindu Merchant / Pandit,Support
+لالہ چونی مل,Male,Hindu Shopkeeper,Support
+نور نانبائی,Male,Baker,Support
+نذر دکان والا,Male,Shopkeeper,Support
+نظیرا دکان والی,Female,Shopkeeper,Support
+مصیب حسین,Male,Munshi / Petty Landlord,Support
+غلام رسول,Male,Schoolteacher,Support
+ملا نوٹیا,Male,Religious Figure,Support
+علمی ملا (مولوی دیا سلائی),Male,Religious Scholar,Support
+معراجی,Male,Friend / Youth,Support
+رم جھم,Female,Café / Tea-house Worker,Support
+تندور والی,Female,Working-class Woman,Support
+تندور والی کا پوت,Male,Child,Minor
+سلامت کی ماں,Female,Mother,Support
+اجمل کی ماں,Female,Mother,Minor
+خالہ جان,Female,Aunt / Household Elder,Support
+خالو جان,Male,Uncle / Household Elder,Support
+چچا جان,Male,Uncle / Household Elder,Support
+ماموں ابا,Male,Maternal Uncle / Elder,Support
+ناصر علی,Male,Family Son,Minor
+حبیب,Male,Neighbour / Youth,Minor
+حبیب بھائی,Male,Neighbour / Elder Brother,Minor
+صاحب میاں,Male,Neighbour / Youth,Minor
+بندو,Male,Servant / Helper,Minor
+جلیب,Male,Neighbour / Boy,Minor
+چریخی,Male,Neighbour / Tough,Minor
+چندی,Female,Neighbour Girl,Minor
+وسنتی,Female,Hindu Woman,Minor
+جگدیش,Male,Hindu Boy,Minor
+لالہ مٹھن لال,Male,Hindu Merchant,Support
+لالہ چونی مل,Male,Hindu Merchant,Support
+اسلام چندر جی,Male,Hindu Gentleman,Minor
+باؤ جی رکشہ والا,Male,Rickshaw Puller,Minor
+کریم بخش,Male,Servant / Helper,Support
+یار محمد,Male,Neighbour / Worker,Support
+نادرہ (سنگی),Female,Neighbour Girl,Minor
+فرزانہ,Female,Young Woman,Minor
+عزیزہ,Female,Young Woman,Minor
+انیسہ,Female,Modern Woman / Expat,Support
+تسنیم,Female,Student,Support
+سریندر,Male,Friend / Colleague,Support
+شیریار,Male,Wealthy Resident,Minor
+انٹی جان,Female,Neighbour Aunty,Support
+زیبا,Female,Young Woman,Support
+رم جھم,Female,Café Girl / Companion,Support
+سائبان والا مجذوب (شاہ کا مزار),Male,Majzoob / Saint,Minor
+مجذوب شہر مبارک,Male,Majzoob,Minor
+ثابت قدم فقیر دہلی,Male,Majzoob / Fakir,Minor
+تاڈیا فقیر/سیالکوٹ,Male,Fakir,Minor
+فقیر سیالکوٹ,Male,Fakir,Minor
+بخوبی نور دین,Male,Astrologer / Mystic,Minor
+بخت خان,Male,Historical Rebel,Minor
+نواب حضرت محل,Female,Nawab / Begum,Minor
+شاہجہان,Male,Mughal Emperor,Minor
+شاہجہان آباد کا بادشاہ (ظفر),Male,Last Mughal King,Minor
+محمد دین امرتسر,Male,Butcher / Worker (Amritsar),Minor
+نور نانبائی,Male,Baker,Support
+محلہ کا کلرک,Male,Shop Clerk,Minor
+غیرمعین کلرک,Male,Shop Clerk,Minor
+نظیر انا,Male,Relative / Elder,Support
+نظیر (شاعر),Male,Poet,Minor
+میر (شاعر),Male,Poet,Minor
+مہاتما گاندھی,Male,Political Leader,Minor
+لیاقت علی خان,Male,Political Leader,Minor
+جمال عبدالناصر,Male,Political Leader,Minor
+ہٹلر,Male,Dictator,Minor
+امیر علیہ السلام,Male,Religious Saint,Minor
+مولانا محمد علی,Male,Political / Religious Leader,Minor
+مولانا ثناء اللہ,Male,Religious Scholar,Minor
+داتا صاحب,Male,Saint,Minor
+حضرت محمد,Male,Religious Figure,Minor
+حضرت علی,Male,Religious Figure,Minor
+حضرت فاطمہ,Female,Religious Figure,Minor
+حضرت حسن,Male,Religious Figure,Minor
+حضرت حسین,Male,Religious Figure,Minor
+حضرت سجاد,Male,Religious Figure,Minor
+حضرت رابعہ بصری,Female,Religious Figure,Minor
+آدم,Male,Religious Figure,Minor
+حوا,Female,Religious Figure,Minor
+ہابیل,Male,Religious Figure,Minor
+قابیل,Male,Religious Figure,Minor
+رام چندر جی,Male,Mythic Figure,Minor
+راما,Male,Mythic Figure,Minor
+کنہیا جی,Male,Mythic Figure,Minor
+ساوتری (اساطیری),Female,Mythic Figure,Minor
+لیلی,Female,Legendary Lover,Minor
+مجنو‍ں,Male,Legendary Lover,Minor
+سلطانہ ڈاکو,Male,Outlaw / Dacoit,Minor
+یس امریکی ساتواں بیڑہ,Unknown,Foreign Military,Antagonist
+چینی فوجیں,Unknown,Foreign Army,Antagonist
+فوجی قافلہ,Unknown,Army Convoy,Antagonist
+ارباب سیاست (اجمالی),Unknown,Ruling Class,Antagonist
+اخبار کے مالک,Unknown,Press Owner,Minor
+یس امریکی ساتواں بیڑہ,Unknown,Foreign Military,Antagonist
+سعادت خاں,Male,Nawab / Aristocrat,Minor
+صاحب رام,Male,Hindu Gentleman,Minor
+سکھ مالک,Male,Property Owner,Minor
+نند لال,Male,Hindu Resident,Minor
+نند لال,Male,Hindu Resident,Minor
+ریشمیں رومال والے,Unknown,Collective / Freedom Fighters,Minor
+ارباب سیاست (اجمالی),Unknown,Ruling Elite,Antagonist
+بینک صاحب,Male,Banker / Officer,Minor
+باؤ جی رکشہ والا,Male,Rickshaw Puller,Minor
+نور نانبائی,Male,Baker,Support
+تاج محل (علامتی),Unknown,Monument (Symbolic),Minor
+شاکیہ منی (بدھ),Male,Religious Figure,Minor
+کُھوپڑی والا بادشاہ,Male,Folktale King,Minor
+کچھوا,Unknown,Animal (Mythic),Minor
+گائے,Unknown,Animal (Sacred),Minor
+مچھلی,Unknown,Animal,Minor
+برگد کا درخت,Unknown,Tree,Minor
+درخت نیم,Unknown,Tree,Minor
+جاپانی دم دار ستارہ,Unknown,Heavenly Sign,Minor
+دم دار ستارہ (عمومی),Unknown,Heavenly Sign,Minor
+یادوں کا پرندہ,Unknown,Symbolic Bird,Minor
+ہبلی (کوئل/یاد),Unknown,Bird,Minor
+بلّی,Unknown,Animal (Cat),Minor
+سمجھدار بلی (صندلی بلی),Unknown,Animal (Cat),Minor
+مچھندر (بندر),Unknown,Animal (Monkey),Minor
+ارباب سیاست (اجمالی),Unknown,Ruling Elite,Antagonist
+شیریار,Male,Wealthy Resident,Minor
+نادرہ (سنگی),Female,Neighbour Girl,Minor
+سائبان والا مجذوب (شاہ کا مزار),Male,Majzoob,Minor
+مجذوب شہر مبارک,Male,Majzoob,Minor
+ثابت قدم فقیر دہلی,Male,Fakir,Minor
+تاڈیا فقیر/سیالکوٹ,Male,Fakir,Minor
+بخوبی نور دین,Male,Astrologer,Minor
+نواب حضرت محل,Female,Nawab / Begum,Minor
+سعادت خاں,Male,Nawab / Aristocrat,Minor
+محمد دین امرتسر,Male,Butcher / Worker,Minor
+محلہ کا کلرک,Male,Shop Clerk,Minor
+غیرمعین کلرک,Male,Shop Clerk,Minor
+نظیر انا,Male,Relative / Elder,Support
+نظیر (شاعر),Male,Poet,Minor
+مہاتما گاندھی,Male,Political Leader,Minor
+لیاقت علی خان,Male,Political Leader,Minor
+جمال عبدالناصر,Male,Political Leader,Minor
+ہٹلر,Male,Dictator,Minor
+مولانا محمد علی,Male,Political / Religious Leader,Minor
+مولانا ثناء اللہ,Male,Religious Scholar,Minor
+داتا صاحب,Male,Saint,Minor
+نور نانبائی,Male,Baker,Support
+ہجرٹیل کی بی بی,Female,Landlady / Old Woman,Minor
+سبز پوش بی بی,Female,Devotional Woman,Minor
+عزیزہ,Female,Young Woman,Minor
+مجذوب شہر مبارک,Male,Majzoob,Minor
+یس امریکی ساتواں بیڑہ,Unknown,Foreign Military,Antagonist
+یا علی,Male,Religious Invocation,Minor
+یار محمد,Male,Neighbour / Worker,Support

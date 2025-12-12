@@ -1,0 +1,32 @@
+Graph analysis summary for different PAGE_WINDOW values
+======================================================
+
+PAGE_WINDOW = 0
+Edges CSV   = raakh_edges_w0.csv
+Number of nodes       : 87
+Number of edges       : 695
+Average degree        : 15.977
+Max degree            : 71
+Nodes with max degree : مشاہد
+Isolated nodes (deg=0): 0
+
+PAGE_WINDOW = 5
+Edges CSV   = raakh_edges_w5.csv
+Number of nodes       : 87
+Number of edges       : 1622
+Average degree        : 37.287
+Max degree            : 86
+Nodes with max degree : ساحِب (انگلو انڈین), مشاہد
+Isolated nodes (deg=0): 0
+
+PAGE_WINDOW = 10
+Edges CSV   = raakh_edges_w10.csv
+Number of nodes       : 87
+Number of edges       : 1990
+Average degree        : 45.747
+Max degree            : 86
+Nodes with max degree : ساحِب (انگلو انڈین), مشاہد, چوہدری اللہ داد خان
+Isolated nodes (deg=0): 0
+
+Note: Nodes are the same across all PAGE_WINDOW runs, but edges
+      become denser as PAGE_WINDOW increases.

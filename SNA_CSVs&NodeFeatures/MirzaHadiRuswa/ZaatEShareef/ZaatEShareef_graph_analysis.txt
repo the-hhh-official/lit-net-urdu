@@ -1,0 +1,32 @@
+Graph analysis summary for different PAGE_WINDOW values
+======================================================
+
+PAGE_WINDOW = 0
+Edges CSV   = ZaatEShareef_edges_w0.csv
+Number of nodes       : 70
+Number of edges       : 510
+Average degree        : 14.571
+Max degree            : 53
+Nodes with max degree : چھوٹے نواب
+Isolated nodes (deg=0): 0
+
+PAGE_WINDOW = 5
+Edges CSV   = ZaatEShareef_edges_w5.csv
+Number of nodes       : 70
+Number of edges       : 1126
+Average degree        : 32.171
+Max degree            : 69
+Nodes with max degree : بیگم صاحبہ, چھوٹے نواب
+Isolated nodes (deg=0): 0
+
+PAGE_WINDOW = 10
+Edges CSV   = ZaatEShareef_edges_w10.csv
+Number of nodes       : 70
+Number of edges       : 1336
+Average degree        : 38.171
+Max degree            : 69
+Nodes with max degree : بیگم صاحبہ, حکیم صاحب, چھوٹے نواب
+Isolated nodes (deg=0): 0
+
+Note: Nodes are the same across all PAGE_WINDOW runs, but edges
+      become denser as PAGE_WINDOW increases.

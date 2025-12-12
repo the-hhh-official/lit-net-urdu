@@ -1,0 +1,32 @@
+Graph analysis summary for different PAGE_WINDOW values
+======================================================
+
+PAGE_WINDOW = 0
+Edges CSV   = Shehr_edges_w0.csv
+Number of nodes       : 80
+Number of edges       : 479
+Average degree        : 11.975
+Max degree            : 51
+Nodes with max degree : نظر
+Isolated nodes (deg=0): 0
+
+PAGE_WINDOW = 5
+Edges CSV   = Shehr_edges_w5.csv
+Number of nodes       : 80
+Number of edges       : 1248
+Average degree        : 31.200
+Max degree            : 79
+Nodes with max degree : رشیدہ میر
+Isolated nodes (deg=0): 0
+
+PAGE_WINDOW = 10
+Edges CSV   = Shehr_edges_w10.csv
+Number of nodes       : 80
+Number of edges       : 1506
+Average degree        : 37.650
+Max degree            : 79
+Nodes with max degree : رشیدہ میر, نظر
+Isolated nodes (deg=0): 0
+
+Note: Nodes are the same across all PAGE_WINDOW runs, but edges
+      become denser as PAGE_WINDOW increases.
