@@ -1,0 +1,76 @@
+Character,Gender,TitleOrClass,Role
+جالپا,Female,Wife,Protagonist
+رماناتھ,Male,Clerk,Protagonist
+دیا ناتھ,Male,RetiredClerk,Support
+جاگیشری,Female,HouseholdElder,Support
+منشی دین دیال,Male,Munshi,Support
+مانگی,Male,Servant,Minor
+گوپی ناتھ,Male,Clerk,Support
+بشمر,Unknown,Villager,Minor
+بساطی,Unknown,Peddler,Minor
+رمیش بابو,Male,Babu,Support
+خان صاحب,Male,HotelOwner,Minor
+شہزادی,Female,VillagerWoman,Minor
+رادھا,Female,VillagerWoman,Minor
+بسنتی,Female,VillagerWoman,Minor
+بنتی,Female,Girl,Minor
+الاجا,Female,ServantGirl,Minor
+نوشہ,Male,Boy,Minor
+ہمایوں,Male,Boy,Minor
+گنگو,Male,Jeweller,Minor
+چرن داس,Male,Broker,Minor
+رتن دیوی,Female,UpperClassLady,Support
+پنڈت اندر بھوشن,Male,Lawyer,Support
+منی بھوشن,Male,Landowner,Antagonist
+وکلا کی رشتہ دار بہن,Female,RelativeLady,Minor
+مانک داس,Male,Shopkeeper,Minor
+امر داس,Male,Servant,Minor
+موسل چند,Male,Servant,Minor
+چپڑاسی,Unknown,OfficePeon,Minor
+چوکیدار,Unknown,Watchman,Minor
+خزانچی صاحب,Male,Treasurer,Minor
+کہار,Male,PalanquinBearer,Minor
+رسوئیا,Unknown,Cook,Minor
+سیٹھانی جی,Female,MerchantWife,Minor
+جوہری (رتن کا),Male,Jeweller,Minor
+بازار کا صراف,Male,Sarraf,Minor
+سیٹھ مہاجن,Male,Moneylender,Antagonist
+پیارہ,Male,CollectionAgent,Minor
+دیتی دین,Male,Shopkeeper,Support
+بڑھیا (دیتی دین کی بیوی),Female,OldWoman,Support
+سیٹھ کروڑی مل,Male,WealthyMerchant,Support
+منیم,Male,Accountant,Minor
+بید جی,Male,AyurvedicDoctor,Minor
+کبیراج,Male,AyurvedicDoctor,Minor
+داروغہ,Male,PoliceOfficer,Antagonist
+نائب داروغہ,Male,PoliceOfficer,Antagonist
+انسپکٹر,Male,PoliceOfficer,Antagonist
+ڈپٹی سپرنٹنڈنٹ,Male,PoliceOfficer,Antagonist
+مسلمان سپاہی,Male,Constable,Minor
+سکھ سپاہی,Male,Constable,Minor
+پہرے والا,Male,JailGuard,Minor
+مارواڑی صاحب,Male,Merchant,Minor
+مولوی صاحب,Male,ReligiousScholar,Minor
+پان والا,Male,PaanSeller,Minor
+قیدی,Male,Prisoner,Minor
+جنگلی,Male,OrchardKeeper,Minor
+ٹھیلے والا,Male,CartVendor,Minor
+سیشن جج,Male,Judge,Support
+گورا چپراسی,Male,Messenger,Minor
+زہرہ,Female,Tawaif,Support
+ونیش,Male,Accused,Support
+بیوی (ونیش),Female,Wife,Minor
+ماں (ونیش),Female,Mother,Minor
+بچے (ونیش),Unknown,Children,Minor
+ماسی (ونیش),Female,Relative,Minor
+حج صاحب,Male,HighCourtJudge,Support
+سرکاری وکیل,Male,Prosecutor,Minor
+صفائی کا وکیل,Male,DefenseLawyer,Support
+ایڈیٹر اخبار,Male,Editor,Minor
+سدھو,Male,Child,Minor
+زمیندار,Male,Landlord,Minor
+عینک والی خاتون,Female,Onlooker,Minor
+ضعیفہ,Female,OldWoman,Minor
+ڈوبتی عورت,Female,DrowningWoman,Minor
+ڈوبتا بچہ,Unknown,Child,Minor
+شیو کی مورت,Unknown,SymbolicDeity,Minor

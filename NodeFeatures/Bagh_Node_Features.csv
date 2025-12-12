@@ -1,0 +1,115 @@
+Character,Gender,TitleOrClass,Role
+اسد,Male,Guerilla Fighter,Protagonist
+اسد کا باپ,Male,Father,Support
+اسد کی ماں,Female,Mother,Minor
+اسد کا چاچا,Male,Male Relative,Minor
+اسد کی پھوپھی,Female,Female Relative,Minor
+حسین بی بی,Female,Elder of the House,Minor
+بوڑھی خادمہ,Female,Maid,Minor
+یاسمین,Female,Village Girl,Support
+ولی,Male,Watchman,Support
+گاؤں کا چوکیدار,Male,Watchman,Minor
+میر حسن,Male,Village Elder,Support
+احمد علی,Male,Village Youth,Support
+نظام الدین,Male,Village Youth,Support
+حکیم,Male,Herbal Doctor,Support
+بیوہ,Female,Widow,Support
+بیوہ کے بیٹے,Male,Village Boys,Minor
+حمنہ,Female,Girl,Minor
+شاہ رخ,Male,Forester,Support
+شاہ رخ کی منگیتر,Female,Fiancé,Minor
+عالم شواری,Male,State Officer,Minor
+ریاض,Male,Student,Support
+ریاض کی ماں,Female,Mother,Support
+کسان مزدور لڑکی,Female,Laborer Girl,Minor
+اساتذہ کالج,Unknown,Teachers,Minor
+پرنسپل کالج,Male,Principal,Minor
+ڈاکٹر کالج,Male,Doctor,Minor
+پیتھالوجسٹ,Male,Doctor,Minor
+چاچا کا دوست,Male,Shopkeeper,Minor
+مہمان لڑکی جنگل,Female,Girl,Minor
+اسسٹنٹ ڈسٹرکٹ انسپکٹر سکولز,Male,Education Officer,Minor
+ملائی بیگم,Female,Madam / Lady,Minor
+تھانیدار کلیم اللہ خان,Male,Police Officer,Antagonist
+ہیڈ کانسٹیبل,Male,Police Personnel,Minor
+لال خاں,Male,Soldier,Minor
+سپاہی کرم دین,Male,Soldier,Support
+ولی محمد حسین دکاندار,Male,Shopkeeper,Minor
+ذوالفقار,Male,Master Lawyer,Support
+کریم ملازم,Male,Servant,Minor
+روشن,Female,Woman of the House,Minor
+بوڑھا خاکسار,Male,Khaksaar Worker,Minor
+ڈاکٹر غوری,Male,Doctor,Minor
+جان محمد,Male,Laborer,Minor
+پھوپھا نواز,Male,Male Relative,Minor
+خوشی محمد,Male,Forest Laborer,Support
+جمیلہ,Female,Milk Seller,Minor
+رحیم,Male,Tenant Farmer,Minor
+مریم,Female,Farmer Woman,Minor
+ماسٹر پرائمری سکول,Male,Teacher,Minor
+غلام,Male,Laborer Companion,Support
+شیر,Unknown,Wild Beast,Antagonist
+امیر خان,Male,Smuggler Guide,Support
+سلطان شاہ,Male,Tribal Chief,Support
+سلطان شاہ کا نوکر,Male,Servant,Minor
+سبز چہرہ درویش,Male,Dervish,Minor
+چار کوس کی عورت,Female,Village Woman,Minor
+چار کوس کی عورت کا شوہر,Male,Village Man,Minor
+عبداللہ (عورت کا بیٹا),Male,Child,Minor
+جھنڈیاں کی عورت,Female,Village Woman,Support
+اسمعیل دکاندار,Male,Shopkeeper,Minor
+گاؤں کا لڑکا,Male,Child,Minor
+غلام کا گھرانہ,Unknown,Family,Minor
+سپاہی (ٹرک ڈرائیور),Male,Soldier,Minor
+زخمی فوجی,Male,Soldier,Minor
+دین,Male,Organization Worker,Support
+دین کے ساتھی,Unknown,Worker Group,Minor
+علی (مرنے والا),Male,Organization Worker,Minor
+مونچھوں والا سپاہی,Male,Soldier,Minor
+حوالدار گل شیر,Male,Havildar,Support
+فوجی اسپیشلسٹ (نقشہ والا),Male,Army Officer,Support
+بچہ (چار کوس گھر),Male,Child,Minor
+چار کوس کے لوگ,Unknown,Villagers,Minor
+انٹیلی جنس کا افسر (ذوالفقار کا ماتحت),Male,Secret Officer,Minor
+عمر,Male,Fighter / Mujahid,Support
+گروپ لیڈر (عمر کے گروپ کا),Male,Group Leader,Support
+سپاہی (نیا چہرہ),Male,Soldier,Minor
+چھ آدمی (گروپ کے),Male,Group Members,Minor
+چوتھا آدمی (گھڑی چیک کرنے والا),Male,Soldier,Minor
+بیٹری والا فوجی,Male,Soldier,Support
+بارود لگانے والا فوجی,Male,Soldier,Support
+ابزرویشن والا فوجی,Male,Soldier,Support
+فوجی (مونچھوں والا),Male,Soldier,Minor
+پولیس/فوجی چوکی,Unknown,Military Unit,Minor
+لنگری کا جبار,Male,Organization Worker,Support
+جبار کی بیوی,Female,Woman of the House,Minor
+گھڑی والے کسان,Male,Farmer,Minor
+کسان کی بیوی,Female,Farmer Woman,Minor
+جنگل کا مزدور,Male,Forest Laborer,Minor
+مزدور کی بیوی,Female,Woman Laborer,Minor
+بچے (مظلومی گاؤں),Unknown,Children,Minor
+بے دخل قبیلہ (ڈی پی),Unknown,D.P. Tribe Member,Minor
+کشمیری میزبان,Male,Kashmiri Laborer,Minor
+کشمیری کا خاندان,Unknown,Family,Minor
+انار گل,Female,Woman,Minor
+پرانا شکاری,Male,Hunter,Minor
+جنگلات کے افسران,Unknown,Forest Officer,Minor
+ذوالفقار کے آدمی,Male,Companion Group,Minor
+مولوی سردار شاہ,Male,Cleric,Minor
+مولوی عنایت شاہ,Male,Cleric,Minor
+علی محمد بریلوی,Male,Cleric,Minor
+مسجد کے درویش,Male,Dervish,Minor
+صوفی فضل کریم,Male,Sufi,Minor
+چراغ,Male,Neighborhood Man,Minor
+چراغ کی بیٹی,Female,Girl,Minor
+چراغ کی بیٹی کا خاوند (پٹواری),Male,Patwari (Land Record Officer),Minor
+مانو,Unknown,Friend,Minor
+ساور,Unknown,Friend,Minor
+شجر,Unknown,Friend,Minor
+بشیر,Male,Friend,Minor
+بیر,Unknown,Friend,Minor
+رون,Unknown,Friend,Minor
+رشید,Male,Friend,Minor
+میکس,Unknown,Friend,Minor
+تندور والی کی لڑکی,Female,Tandoor Worker,Minor
+ناظم,Male,Friend,Minor

@@ -1,0 +1,154 @@
+Character,Gender,TitleOrClass,Role
+سلطان حسین,Male,Student-Writer,Narrator
+احمد فیروز,Male,CivilServant-Narrator,Narrator
+آفتاب عمر,Male,Writer-Narrator,Narrator
+فاروق,Male,Child,Support
+نسرین (آفتاب عمر کی بیوی),Female,Housewife,Support
+اماں (آفتاب عمر کی ماں),Female,Household-Elder,Support
+شیخ عمر درانہ,Male,Landowner,Support
+سعیدہ,Female,Sister,Support
+بھانجی,Female,Child,Minor
+آدم,Male,Friend,Support
+نوری,Female,ChildhoodFriend,Support
+پیشیا,Female,VillageGirl,Minor
+قربان تانگے والا,Male,Coachman,Minor
+تانگے والے کا کسان,Male,Farmer,Minor
+تانگے والے کی عورت,Female,Farmer-Wife,Minor
+نجومی (کنویں والا),Male,FortuneTeller,Minor
+خاکسار عینک فروش,Male,ReligiousActivist,Minor
+ٹنڈا کباب والا,Male,StreetVendor,Minor
+مزارع,Male,Peasant,Minor
+چوہدری نذیر,Male,Schoolmaster,Support
+بیدی,Female,Servant,Minor
+چوہدری (ایانہ حصہ راوی),Male,MiddleClass-Narrator,Narrator
+راوی کی بیوی (ایانہ حصّہ),Female,Housewife,Support
+راوی کا باپ (ایانہ حصّہ),Male,LowerMiddleClass,Support
+راوی کی ماں (ایانہ حصّہ),Female,Household-Elder,Support
+کمال (ایانہ حصّہ راوی کا بیٹا),Male,Child,Minor
+ایانہ بیگ,Male,Lawyer,Protagonist
+ایانہ کی ماں,Female,Household-Elder,Support
+اظہر,Male,LowerMiddleClass,Support
+کلثوم (اظہر کی بیوی),Female,Housewife,Minor
+شیخ مظہر الدین,Male,ReligiousScholar,Minor
+سلمی,Female,Sister,Minor
+نسیم,Female,EducatedMiddleClass,Support
+نسیم کے بچے,Unknown,Children,Minor
+خلیق,Male,Lawyer,Support
+مبشر,Male,Lawyer-Politician,Support
+فیاض ایڈیٹر,Male,Editor,Support
+محفل کے دیگر وکیل,Unknown,Lawyer-Group,Minor
+ظفر علی چوہان,Male,Magistrate,Protagonist
+کوثر,Female,EducatedWife,Protagonist
+ظفر کا بیٹا,Male,Child,Minor
+ظفر کی بیٹی,Female,Child,Minor
+کوثر کی ماں,Female,Widow-LandownerClass,Support
+کوثر کا ماموں,Male,Jagirdar,Support
+نواب شیر محمد خان,Male,Nawab-Landlord,Support
+کوثر کا بھائی (قیصر),Male,Adventurer,Support
+قیصر کی مقامی بیوی (جزیرہ),Female,IslandLocal,Minor
+قصور کا بااثر شخص,Male,LocalElite,Minor
+مرد لیکچرار (کوثر کا مبینہ عاشق),Male,Lecturer,Minor
+نوکرانی (ظفر کے گھر),Female,Servant,Minor
+میاں محمد (ظفر کا باپ),Male,SmallLandowner,Support
+ہیڈ ماسٹر داماد,Male,Headmaster-Landowner,Support
+ظفر کا دوست (پولیس اطلاع),Male,Friend,Minor
+مسٹر بیٹی,Male,Lawyer,Support
+علاقے کا مشہور سیاست دان,Male,Politician,Antagonist
+شاہ جی حکیم پیر بخش,Male,Hakim-Peer,Support
+نوجوان عورت (چائے دینے والی),Female,Servant,Minor
+چار سالہ بچہ (کوثر کی ماں کے پاس),Male,Child,Minor
+بزرگ ملازم (قصور حویلی),Male,Servant,Minor
+جوان لڑکا (قصور حویلی),Male,FamilyYouth,Minor
+کوثر کے چچا,Male,Uncle-LandownerClass,Minor
+مہاجر مخبر (حویلی کا دعویٰ),Male,RefugeeInformer,Minor
+فلاں استغاثہ اسسٹنٹ,Unknown,ProsecutionAssistant,Minor
+دیوانی کورٹ کا بابو,Male,Clerk,Minor
+واپسی کا سفر راوی,Male,Migrant-Narrator,Narrator
+غلام محمد,Male,MigrantWorker,Support
+حسین شاہ,Male,MigrantWorker,Protagonist
+ارشاد,Male,MigrantWorker,Support
+ثاقب,Male,MigrantWorker,Support
+حیدر شاہ,Male,MigrantWorker,Support
+علی محمد حافظ آبادی,Male,MigrantWorker,Minor
+شیر باز,Male,MigrantWorker,Support
+میر پوری مکین,Unknown,MigrantGroup,Minor
+حافظ آبادی مکین,Unknown,MigrantGroup,Minor
+بنگالی باورچی,Male,Cook,Support
+بنگالی خط نویس,Male,ErrandWorker,Minor
+بوڑھا یہودی مالک مکان,Male,Landlord,Support
+امیگریشن وکیل,Male,Lawyer-Immigration,Support
+سمگلر ایجنٹ,Male,Smuggler-Agent,Antagonist
+فورمین,Male,FactoryForeman,Minor
+ہسپتال کے ڈاکٹر,Unknown,Doctor,Support
+ڈاکٹری جیل کا افسر,Male,PrisonOfficer,Support
+ڈاکٹری جیل کا دربان,Male,Gatekeeper,Minor
+ثاقب کا چچا,Male,Guardian,Minor
+راوی کی پاکستانی بیوی,Female,Housewife,Support
+راوی کے پاکستانی بچے,Unknown,Children,Minor
+رضا علی,Male,MigrantWorker,Support
+رضا علی کی بیوی,Female,WorkingClassWoman,Minor
+رضا علی کی بیٹی,Female,WorkingClassWoman,Minor
+رضا علی کے نواسے نواسیاں,Unknown,GrandchildrenGroup,Minor
+مارگریٹ میکنٹریٹ,Female,ScottishWorkingClass,Support
+ماجد,Male,Child,Minor
+غلام محمد (گلاسگو ساتھی),Male,MigrantWorker,Minor
+میری,Female,WorkingClass,Protagonist
+جمیکے جارج,Male,JamaicanWorker,Support
+جمیکے جارج کا بھائی,Male,JamaicanWorker,Minor
+میری کا باپ,Male,WorkingClass-Drunk,Minor
+میری کی ماں,Female,WorkingClassWoman,Minor
+میری کا بھائی,Male,WorkingClassYouth,Minor
+آئرش دکاندار,Male,Shopkeeper,Minor
+آئرش دکاندار کی بیوی,Female,Shopkeeper-Wife,Minor
+جمیکا کے کالے,Unknown,JamaicanGroup,Minor
+اکرم میر پوری,Male,Fixer-SmoglerSide,Support
+شیر باز میر پوری,Male,MigrantWorker,Minor
+مائیکل جارج,Male,Child-MixedHeritage,Support
+ڈیوڈ (میری کا بیٹا),Male,Child,Minor
+میری کے دوسرے بچے,Unknown,Children,Minor
+میری کا آئرش ساتھی,Male,IrishPartner,Support
+مارکیٹ کی بوڑھی عورت,Female,Passerby,Minor
+سلطان حسین کے پروفیسر,Male,Professor,Support
+بلانکا,Female,Student,Support
+ازابلا,Female,Student,Support
+بلانکا کے والد,Male,MiddleClassFather,Minor
+بلانکا کی ماں,Female,MiddleClassMother,Minor
+بلانکا کے بھائی,Male,MiddleClassYouth,Minor
+بائرن,Male,Student-Friend,Support
+ڈیویڈ نٹر جیئرلڈ بائرن,Male,Student,Support
+جین,Female,Student,Minor
+چین,Female,Student,Minor
+میرو,Female,Student,Minor
+رابرٹ,Male,Student,Minor
+میٹرن,Female,Matron,Minor
+انیڈ سی گل,Female,Student-HostelResident,Support
+محترمہ سی گل,Female,Teacher-HostelWarden,Support
+ہنگیرین خاوند,Male,Refugee-Husband,Support
+ہنگیرین بیوی,Female,Refugee-Wife,Support
+اینا ہیمبرگ,Female,ShipHostess,Support
+نوجوان جرمن لڑکا,Male,Passenger-Youth,Minor
+جرمن لڑکی (برج ساتھی),Female,Passenger-Youth,Minor
+ہنگیرین لڑکا,Male,RefugeeChild,Minor
+دیورن کے دو بوڑھے,Male,OldMenGroup,Minor
+جہاز کا نوجوان افسر,Male,ShipOfficer,Minor
+پہلے سال کی لڑکیاں (فراش),Female,FreshmanGroup,Minor
+سینئر لڑکیاں,Female,SeniorStudentsGroup,Minor
+راوی کی بیوی (تہران واقعہ),Female,Housewife,Support
+لاہور کا بوڑھا شخص,Male,OldMan,Minor
+فقیر,Male,Beggar,Minor
+گوالا,Male,Milkman,Minor
+نوعمر لڑکا (برآمدہ),Male,NeighbourBoy,Minor
+ہیڈ کلرک,Male,OfficeHeadClerk,Minor
+چپراسی,Male,Peon,Minor
+ٹا پسٹ,Male,Typist,Minor
+ڈسپیچر,Male,OfficeWorker,Minor
+کلرک,Male,ClerkGroup,Minor
+کتا,Unknown,Animal,Minor
+بلی,Unknown,Animal,Minor
+نیولا,Unknown,Animal,Minor
+کبوتر,Unknown,Bird,Minor
+چڑیاں,Unknown,Bird,Minor
+مینا,Unknown,Bird,Minor
+طوطا,Unknown,Bird,Minor
+کتیا,Unknown,Animal,Minor
+پلا,Unknown,Animal,Minor
