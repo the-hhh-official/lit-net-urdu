@@ -48,10 +48,10 @@ def encode_one_hot(gender: str, role: str):
     g_vec = np.zeros(len(GENDER_CATS), dtype=np.float32)
     r_vec = np.zeros(len(ROLE_CATS), dtype=np.float32)
 
-    g_vec[g_idx] = 1
-    r_vec[r_idx] = 1
+    g_vec[g_idx] = 1.0
+    r_vec[r_idx] = 1.0
 
-    return np.concatenate([g_vec, r_vec], axis=0)
+    return np.concatenate([g_vec, r_vec], axis=0)  # length 10
 
 
 # ======================
@@ -84,7 +84,7 @@ def load_metadata():
 
 
 # ======================
-# BUILD GRAPHS
+# NODE FEATURE DICTS
 # ======================
 
 def load_node_feature_dict(path):
@@ -97,11 +97,63 @@ def load_node_feature_dict(path):
     return g, r
 
 
-def build_nx_graph(edge_path, node_feat_path):
+# ======================
+# SEMANTIC & STRUCTURAL FEATURES (POOLED)
+# ======================
+
+def compute_semantic_features(gender_dict, role_dict):
+    genders = list(gender_dict.values())
+    roles   = list(role_dict.values())
+
+    total_g = len(genders) if len(genders) > 0 else 1
+    total_r = len(roles)   if len(roles)   > 0 else 1
+
+    gender_props = [genders.count(g) / total_g for g in GENDER_CATS]
+    role_props   = [roles.count(r)   / total_r for r in ROLE_CATS]
+
+    return gender_props + role_props  # length 3 + 7 = 10
+
+
+def compute_structural_features(G):
+    n = G.number_of_nodes()
+    m = G.number_of_edges()
+
+    if n == 0:
+        return [0.0]*8
+
+    degs = [d for _, d in G.degree()]
+    if len(degs) == 0:
+        degs = [0]
+
+    density      = nx.density(G) if n > 1 else 0.0
+    deg_mean     = float(np.mean(degs))
+    deg_std      = float(np.std(degs))
+    deg_max      = float(np.max(degs))
+    clustering   = float(nx.average_clustering(G)) if m > 0 else 0.0
+    transitivity = float(nx.transitivity(G))       if m > 0 else 0.0
+
+    return [
+        float(n),
+        float(m),
+        density,
+        deg_mean,
+        deg_std,
+        deg_max,
+        clustering,
+        transitivity
+    ]
+
+
+# ======================
+# BUILD GRAPHS WITH RICH NODE FEATURES
+# ======================
+
+def build_nx_graph_with_features(edge_path, node_feat_path):
     df_edges = pd.read_csv(edge_path)
     gender_dict, role_dict = load_node_feature_dict(node_feat_path)
     G = nx.Graph()
 
+    # add weighted edges
     for _, row in df_edges.iterrows():
         u, v = str(row["Character_A"]), str(row["Character_B"])
         w = float(row["Weight"])
@@ -115,25 +167,45 @@ def build_nx_graph(edge_path, node_feat_path):
         if not G.has_node(ch):
             G.add_node(ch)
 
-    # attach node features
+    # compute node-level structural stats
+    deg_dict   = dict(G.degree())
+    wdeg_dict  = dict(G.degree(weight="weight"))
+    clust_dict = nx.clustering(G) if G.number_of_edges() > 0 else {n: 0.0 for n in G.nodes()}
+
+    # attach rich node features: [one_hot_gender_role, deg, wdeg, clustering]
     for node in G.nodes():
         g = gender_dict.get(node, "Unknown")
         r = role_dict.get(node, "Minor")
-        G.nodes[node]["x"] = encode_one_hot(g, r)
+        one_hot = encode_one_hot(g, r)
 
-    return G
+        deg   = float(deg_dict.get(node, 0.0))
+        wdeg  = float(wdeg_dict.get(node, 0.0))
+        clust = float(clust_dict.get(node, 0.0))
+
+        extra = np.array([deg, wdeg, clust], dtype=np.float32)  # length 3
+        G.nodes[node]["x"] = np.concatenate([one_hot, extra], axis=0)  # total 13 dims
+
+    # pooled features for this graph
+    semantic_vec   = compute_semantic_features(gender_dict, role_dict)  # 10
+    structural_vec = compute_structural_features(G)                     # 8
+
+    return G, semantic_vec, structural_vec
 
 
 def build_all_graphs(edge_paths, node_paths):
-    print("[GRAPH] Building NetworkX graphs...")
+    print("[GRAPH] Building NetworkX graphs with rich node features...")
     graphs = []
+    sem_feats = []
+    struct_feats = []
     total = len(edge_paths)
     for i, (e, n) in enumerate(zip(edge_paths, node_paths)):
         print(f"[GRAPH] Building graph {i+1}/{total}...", end="\r")
-        G = build_nx_graph(e, n)
+        G, sem_vec, struct_vec = build_nx_graph_with_features(e, n)
         graphs.append(G)
+        sem_feats.append(sem_vec)
+        struct_feats.append(struct_vec)
     print(f"\n[GRAPH] Done. Built {len(graphs)} graphs.")
-    return graphs
+    return graphs, np.array(sem_feats, dtype=np.float32), np.array(struct_feats, dtype=np.float32)
 
 
 # ======================
@@ -234,11 +306,12 @@ def sample_epoch_train_indices(author_to_train_indices,
 # GAT FINGERPRINT PIPELINE
 # ======================
 
-def gat_build_fingerprints(out_np="gat_fingerprints.npy",
-                           out_csv="gat_fingerprints.csv"):
+def gat_build_fingerprints(out_np="gat_fingerprints_rich.npy",
+                           out_csv="gat_fingerprints_rich.csv",
+                           out_hybrid_csv="gat_hybrid_features.csv"):
     """
-    Build book-level fingerprints with GAT, save them,
-    and return (Z, y, book_ids, authors, label_encoder).
+    Build book-level fingerprints with GAT (rich node features),
+    save them, and also save hybrid (GAT + semantic + structural) features.
 
     Logic:
 
@@ -265,7 +338,7 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     meta, book_ids, edge_paths, node_paths, authors = load_metadata()
     counts, min_books = print_author_stats(authors)
 
-    graphs = build_all_graphs(edge_paths, node_paths)
+    graphs, sem_feats, struct_feats = build_all_graphs(edge_paths, node_paths)
 
     # 2) Convert to PyG Data objects
     print("\n[PYG] Converting NetworkX graphs to PyG Data objects...")
@@ -307,7 +380,7 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
         pyg_data_list.append(nx_to_pyg(G, y[i]))
     print(f"\n[PYG] Done. Built {len(pyg_data_list)} PyG graphs.")
 
-    in_dim = pyg_data_list[0].x.shape[1]
+    in_dim = pyg_data_list[0].x.shape[1]  # should be 13
     num_classes = len(label_encoder.classes_)
 
     # 3) GAT model
@@ -362,9 +435,9 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     epoch_rng = np.random.RandomState(123)
 
     # 5) Train GAT with PER-EPOCH SAMPLING from TRAIN POOL
-    EPOCHS = 90
-    print("\n[TRAIN] Starting GAT training with per-epoch random sampling of train books "
-          "and fixed real test set...")
+    EPOCHS = 100
+    print("\n[TRAIN] Starting GAT training with rich node features, "
+          "per-epoch random sampling, and fixed real test set...")
 
     for epoch in range(1, EPOCHS + 1):
         # --- sample train books for this epoch (5 per author if possible) ---
@@ -376,7 +449,8 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
 
         # build dataset/loaders for this epoch
         train_dataset = [pyg_data_list[i] for i in epoch_train_idx]
-        train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True)
+        from torch_geometric.loader import DataLoader as DL_train
+        train_loader = DL_train(train_dataset, batch_size=8, shuffle=True)
 
         # --- training ---
         model.train()
@@ -417,7 +491,7 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
               f"Train Loss: {train_loss:.4f}  "
               f"Train Acc: {train_acc:.3f}  Test Acc: {test_acc:.3f}")
 
-    # 6) Extract fingerprints for ALL graphs
+    # 6) Extract GAT fingerprints for ALL graphs
     print("\n[EMB] Extracting GAT fingerprints for all graphs...")
     from torch_geometric.loader import DataLoader as DL_all
     all_loader = DL_all(pyg_data_list, batch_size=8, shuffle=False)
@@ -437,18 +511,45 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     Z = np.concatenate(Z_list, axis=0)
     y_arr = np.concatenate(y_list, axis=0)
 
-    # 7) Save fingerprints
+    # 7) Save GAT fingerprints only
+    emb_cols = [f"emb_{i}" for i in range(Z.shape[1])]
     np.save(out_np, Z)
-    df_out = pd.DataFrame(Z, columns=[f"emb_{i}" for i in range(Z.shape[1])])
-    df_out.insert(0, "book_id", book_ids)
-    df_out.insert(1, "author", authors)
-    df_out.to_csv(out_csv, index=False)
+    df_fp = pd.DataFrame(Z, columns=emb_cols)
+    df_fp.insert(0, "book_id", book_ids)
+    df_fp.insert(1, "author", authors)
+    df_fp.to_csv(out_csv, index=False)
     print(f"[SAVE] Saved fingerprints to: {out_np}")
     print(f"[SAVE] Saved CSV to:          {out_csv}")
+
+    # 8) Save hybrid (semantic + structural + GAT) features
+    sem_cols = (
+        [f"gender_prop_{g}" for g in GENDER_CATS] +
+        [f"role_prop_{r.replace('-', '_')}" for r in ROLE_CATS]
+    )
+    struct_cols = [
+        "n_nodes", "n_edges", "density",
+        "deg_mean", "deg_std", "deg_max",
+        "clustering", "transitivity"
+    ]
+
+    df_hybrid = pd.DataFrame({
+        "book_id": book_ids,
+        "author": authors
+    })
+
+    for j, col in enumerate(sem_cols):
+        df_hybrid[col] = sem_feats[:, j]
+    for j, col in enumerate(struct_cols):
+        df_hybrid[col] = struct_feats[:, j]
+    for j, col in enumerate(emb_cols):
+        df_hybrid[col] = Z[:, j]
+
+    df_hybrid.to_csv(out_hybrid_csv, index=False)
+    print(f"[SAVE] Saved hybrid features CSV to: {out_hybrid_csv}")
 
     return Z, y_arr, book_ids, authors, label_encoder
 
 
 if __name__ == "__main__":
-    print("Running GAT fingerprint generation (only GAT, no AE, no extra features)...")
+    print("Running GAT fingerprint generation with rich node features + pooled semantic/structural...")
     gat_build_fingerprints()
