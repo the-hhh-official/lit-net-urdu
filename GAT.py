@@ -33,6 +33,9 @@ ROLE_CATS   = ["Protagonist", "Antagonist", "Support",
 GENDER_MAP = {g: i for i, g in enumerate(GENDER_CATS)}
 ROLE_MAP   = {r: i for i, r in enumerate(ROLE_CATS)}
 
+# how many training books per author per epoch
+TRAIN_BOOKS_PER_AUTHOR_PER_EPOCH = 5
+
 # ======================
 # ONE-HOT ENCODING
 # ======================
@@ -143,18 +146,17 @@ def print_author_stats(authors):
 
     min_books = min(counts.values())
     print(f"[STATS] Minimum #books for any author = {min_books}")
-    if min_books < 2:
-        print("[STATS] WARNING: some author has < 2 books. "
-              "The 'min_books - 1' train rule will fail.")
     return counts, min_books
 
-def make_author_split(authors, random_state=42, verbose=False):
+def make_fixed_author_split(authors, random_state=42, verbose=False):
     """
-    Build train/test indices such that:
-      - For each author with k books:
-          * (m - 1) books go to train, where m = min_k(k)
-          * remaining books go to test
-      - So each author has at least 1 test book.
+    Fixed author-aware split:
+
+      - For each author:
+          * Randomly choose exactly 1 book as TEST.
+          * All remaining books form that author's TRAIN POOL.
+      - The chosen test book is never used in training (no leakage).
+      - During training, each epoch will sample from the TRAIN POOL only.
     """
     rng = np.random.RandomState(random_state)
 
@@ -162,43 +164,66 @@ def make_author_split(authors, random_state=42, verbose=False):
     for idx, a in enumerate(authors):
         author_to_indices[a].append(idx)
 
-    counts = {a: len(idxs) for a, idxs in author_to_indices.items()}
-    min_books = min(counts.values())
-
-    if min_books < 2:
-        raise ValueError(
-            "At least one author has < 2 books; "
-            "the 'min_books - 1' rule requires >= 2 books per author."
-        )
-
-    train_per_author = min_books - 1
+    test_idx = []
+    train_pool_idx = []
+    author_to_train_indices = {}
 
     if verbose:
-        print(f"\n[SPLIT] Using author-aware split (random_state={random_state}):")
-        print(f"        train_per_author = min_books - 1 = {train_per_author}")
-
-    train_idx = []
-    test_idx  = []
+        print("\n[SPLIT] Building fixed author-aware split:")
+        print("        Exactly 1 held-out test book per author.")
 
     for a, idxs in author_to_indices.items():
         idxs = np.array(idxs)
-        rng.shuffle(idxs)
-        this_train = idxs[:train_per_author]
-        this_test  = idxs[train_per_author:]
-        train_idx.extend(this_train)
-        test_idx.extend(this_test)
-        if verbose:
-            print(f"        Author '{a}': "
-                  f"train {len(this_train)} books, test {len(this_test)} books")
+        if len(idxs) < 2:
+            raise ValueError(
+                f"Author '{a}' has only {len(idxs)} book(s); "
+                f"need at least 2 to hold out 1 for test and still have training data."
+            )
 
-    train_idx = np.array(sorted(train_idx))
-    test_idx  = np.array(sorted(test_idx))
+        rng.shuffle(idxs)
+        this_test = idxs[0]       # single held-out test book
+        this_train = idxs[1:]     # remaining books = train pool
+
+        test_idx.append(this_test)
+        train_pool_idx.extend(this_train.tolist())
+        author_to_train_indices[a] = this_train.tolist()
+
+        if verbose:
+            print(f"        Author '{a}': test=1 book, train_pool={len(this_train)} books")
+
+    test_idx = np.array(sorted(test_idx))
+    train_pool_idx = np.array(sorted(train_pool_idx))
 
     if verbose:
-        print(f"[SPLIT] Total train graphs: {len(train_idx)}")
-        print(f"[SPLIT] Total test  graphs: {len(test_idx)}\n")
+        print(f"[SPLIT] Total train-pool graphs: {len(train_pool_idx)}")
+        print(f"[SPLIT] Total test graphs:       {len(test_idx)}\n")
 
-    return train_idx, test_idx
+    return train_pool_idx, test_idx, author_to_train_indices
+
+def sample_epoch_train_indices(author_to_train_indices,
+                               rng,
+                               per_author=TRAIN_BOOKS_PER_AUTHOR_PER_EPOCH):
+    """
+    For each author, sample up to `per_author` books from that author's
+    training pool (without replacement within the epoch).
+
+    If an author has fewer than `per_author` training books, use all of them.
+    """
+    epoch_indices = []
+
+    for a, train_ids in author_to_train_indices.items():
+        if len(train_ids) == 0:
+            continue
+
+        if len(train_ids) <= per_author:
+            chosen = train_ids
+        else:
+            chosen = rng.choice(train_ids, size=per_author, replace=False).tolist()
+
+        epoch_indices.extend(chosen)
+
+    epoch_indices = np.array(epoch_indices, dtype=int)
+    return epoch_indices
 
 # ======================
 # GAT FINGERPRINT PIPELINE
@@ -210,8 +235,15 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     Build book-level fingerprints with GAT, save them,
     and return (Z, y, book_ids, authors, label_encoder).
 
-    NOTE: During training, train/test split is resampled
-    at every epoch (author-aware random split).
+    NEW SPLIT LOGIC (no leakage):
+
+      - For each author, pick exactly ONE fixed test book.
+      - That book is NEVER used in training.
+      - All other books form a TRAIN POOL.
+      - Each epoch:
+          * For each author, sample up to 5 books from that author's TRAIN POOL.
+          * Train on the union of these sampled books.
+      - Test set is fixed across epochs and only used for evaluation.
     """
     import torch
     import torch.nn as nn
@@ -233,6 +265,7 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
 
     # 2) Convert to PyG Data objects
     print("\n[PYG] Converting NetworkX graphs to PyG Data objects...")
+
     def nx_to_pyg(G, label_idx):
         import torch
         from torch_geometric.data import Data
@@ -311,23 +344,36 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     optimizer = torch.optim.Adam(model.parameters(), lr=0.003, weight_decay=1e-4)
     criterion = torch.nn.CrossEntropyLoss()
 
-    # 4) Train GAT with RANDOM SPLIT EACH EPOCH
-    EPOCHS = 100
-    print("\n[TRAIN] Starting GAT training with per-epoch random splits...")
+    # 4) Build a FIXED author-aware split (1 test book per author)
+    train_pool_idx, test_idx, author_to_train_indices = make_fixed_author_split(
+        authors,
+        random_state=42,
+        verbose=True
+    )
+
+    # fixed test dataset
+    test_dataset = [pyg_data_list[i] for i in test_idx]
+    test_loader_fixed = DataLoader(test_dataset, batch_size=8, shuffle=False)
+
+    # RNG for per-epoch sampling
+    epoch_rng = np.random.RandomState(123)
+
+    # 5) Train GAT with PER-EPOCH SAMPLING from TRAIN POOL
+    EPOCHS = 50
+    print("\n[TRAIN] Starting GAT training with fixed test set "
+          "and per-epoch random sampling of train books...")
+
     for epoch in range(1, EPOCHS + 1):
-        # --- resample split (different random_state each epoch) ---
-        train_idx, test_idx = make_author_split(
-            authors,
-            random_state=42 + epoch,      # different seed → different split
-            verbose=(epoch == 1)          # show full details only for epoch 1
+        # --- sample train books for this epoch (5 per author if possible) ---
+        epoch_train_idx = sample_epoch_train_indices(
+            author_to_train_indices,
+            rng=epoch_rng,
+            per_author=TRAIN_BOOKS_PER_AUTHOR_PER_EPOCH
         )
 
-        from torch_geometric.loader import DataLoader
-        train_dataset = [pyg_data_list[i] for i in train_idx]
-        test_dataset  = [pyg_data_list[i] for i in test_idx]
-
+        # build dataset/loaders for this epoch
+        train_dataset = [pyg_data_list[i] for i in epoch_train_idx]
         train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True)
-        test_loader  = DataLoader(test_dataset,  batch_size=8, shuffle=False)
 
         # --- standard training step ---
         model.train()
@@ -351,24 +397,24 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
         train_loss = total_loss / total if total > 0 else 0.0
         train_acc  = correct / total if total > 0 else 0.0
 
-        # quick test accuracy on *this epoch's* random test split
+        # --- evaluation on FIXED test set (1 held-out book per author) ---
         model.eval()
         correct_t = 0
         total_t = 0
         with torch.no_grad():
-            for batch in test_loader:
+            for batch in test_loader_fixed:
                 batch = batch.to(device)
                 logits, _ = model(batch.x, batch.edge_index, batch.batch)
                 pred = logits.argmax(dim=1)
                 correct_t += int((pred == batch.y).sum())
                 total_t   += batch.num_graphs
         test_acc = correct_t / total_t if total_t > 0 else 0.0
-        
+
         print(f"[TRAIN] Epoch {epoch:03d}/{EPOCHS}  "
               f"Train Loss: {train_loss:.4f}  "
               f"Train Acc: {train_acc:.3f}  Test Acc: {test_acc:.3f}")
 
-    # 5) Extract fingerprints for ALL graphs
+    # 6) Extract fingerprints for ALL graphs
     print("\n[EMB] Extracting GAT fingerprints for all graphs...")
     from torch_geometric.loader import DataLoader as DL_all
     all_loader = DL_all(pyg_data_list, batch_size=8, shuffle=False)
@@ -388,7 +434,7 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     Z = np.concatenate(Z_list, axis=0)
     y_arr = np.concatenate(y_list, axis=0)
 
-    # 6) Save fingerprints
+    # 7) Save fingerprints
     np.save(out_np, Z)
     df_out = pd.DataFrame(Z, columns=[f"emb_{i}" for i in range(Z.shape[1])])
     df_out.insert(0, "book_id", book_ids)
