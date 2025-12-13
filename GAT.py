@@ -4,6 +4,11 @@ import pandas as pd
 import networkx as nx
 from collections import defaultdict
 
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch.utils.data import DataLoader as TorchDataLoader, TensorDataset
+
 # ======================
 # CONSTANTS & SETTINGS
 # ======================
@@ -33,8 +38,18 @@ ROLE_CATS   = ["Protagonist", "Antagonist", "Support",
 GENDER_MAP = {g: i for i, g in enumerate(GENDER_CATS)}
 ROLE_MAP   = {r: i for i, r in enumerate(ROLE_CATS)}
 
-# how many training books per author per epoch
-TRAIN_BOOKS_PER_AUTHOR_PER_EPOCH = 5
+# ======================
+# AE (Autoencoder) SETTINGS
+# ======================
+
+AE_HIDDEN_DIM = 64      # hidden layer size of AE
+AE_LATENT_DIM = 16      # bottleneck size
+AE_EPOCHS = 50          # AE training epochs
+AE_BATCH_SIZE = 64      # batch size for AE training
+AE_LR = 1e-3            # learning rate for AE
+AE_NOISE_STD = 0.10     # std of Gaussian noise in latent space
+N_AUG_PER_GRAPH = 4     # how many synthetic graphs per real train graph
+
 
 # ======================
 # ONE-HOT ENCODING
@@ -51,6 +66,7 @@ def encode_one_hot(gender: str, role: str):
     r_vec[r_idx] = 1
 
     return np.concatenate([g_vec, r_vec], axis=0)
+
 
 # ======================
 # LOAD METADATA
@@ -80,6 +96,7 @@ def load_metadata():
 
     return merged, book_ids, edge_paths, node_paths, authors
 
+
 # ======================
 # BUILD GRAPHS
 # ======================
@@ -92,6 +109,7 @@ def load_node_feature_dict(path):
         g[ch] = str(row[NODE_COL_GENDER])
         r[ch] = str(row[NODE_COL_ROLE])
     return g, r
+
 
 def build_nx_graph(edge_path, node_feat_path):
     df_edges = pd.read_csv(edge_path)
@@ -119,6 +137,7 @@ def build_nx_graph(edge_path, node_feat_path):
 
     return G
 
+
 def build_all_graphs(edge_paths, node_paths):
     print("[GRAPH] Building NetworkX graphs...")
     graphs = []
@@ -129,6 +148,7 @@ def build_all_graphs(edge_paths, node_paths):
         graphs.append(G)
     print(f"\n[GRAPH] Done. Built {len(graphs)} graphs.")
     return graphs
+
 
 # ======================
 # AUTHOR STATS & SPLIT
@@ -148,6 +168,7 @@ def print_author_stats(authors):
     print(f"[STATS] Minimum #books for any author = {min_books}")
     return counts, min_books
 
+
 def make_fixed_author_split(authors, random_state=42, verbose=False):
     """
     Fixed author-aware split:
@@ -156,7 +177,6 @@ def make_fixed_author_split(authors, random_state=42, verbose=False):
           * Randomly choose exactly 1 book as TEST.
           * All remaining books form that author's TRAIN POOL.
       - The chosen test book is never used in training (no leakage).
-      - During training, each epoch will sample from the TRAIN POOL only.
     """
     rng = np.random.RandomState(random_state)
 
@@ -165,8 +185,7 @@ def make_fixed_author_split(authors, random_state=42, verbose=False):
         author_to_indices[a].append(idx)
 
     test_idx = []
-    train_pool_idx = []
-    author_to_train_indices = {}
+    train_idx = []
 
     if verbose:
         print("\n[SPLIT] Building fixed author-aware split:")
@@ -185,45 +204,127 @@ def make_fixed_author_split(authors, random_state=42, verbose=False):
         this_train = idxs[1:]     # remaining books = train pool
 
         test_idx.append(this_test)
-        train_pool_idx.extend(this_train.tolist())
-        author_to_train_indices[a] = this_train.tolist()
+        train_idx.extend(this_train.tolist())
 
         if verbose:
-            print(f"        Author '{a}': test=1 book, train_pool={len(this_train)} books")
+            print(f"        Author '{a}': test=1 book, train={len(this_train)} books")
 
     test_idx = np.array(sorted(test_idx))
-    train_pool_idx = np.array(sorted(train_pool_idx))
+    train_idx = np.array(sorted(train_idx))
 
     if verbose:
-        print(f"[SPLIT] Total train-pool graphs: {len(train_pool_idx)}")
-        print(f"[SPLIT] Total test graphs:       {len(test_idx)}\n")
+        print(f"[SPLIT] Total train graphs: {len(train_idx)}")
+        print(f"[SPLIT] Total test graphs:  {len(test_idx)}\n")
 
-    return train_pool_idx, test_idx, author_to_train_indices
+    return train_idx, test_idx, author_to_indices
 
-def sample_epoch_train_indices(author_to_train_indices,
-                               rng,
-                               per_author=TRAIN_BOOKS_PER_AUTHOR_PER_EPOCH):
+
+# ======================
+# FEATURE AUTOENCODER
+# ======================
+
+class FeatureAE(nn.Module):
+    def __init__(self, in_dim, hidden_dim=64, latent_dim=16):
+        super().__init__()
+        self.encoder = nn.Sequential(
+            nn.Linear(in_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, latent_dim)
+        )
+        self.decoder = nn.Sequential(
+            nn.Linear(latent_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, in_dim)
+        )
+
+    def forward(self, x):
+        z = self.encoder(x)
+        x_hat = self.decoder(z)
+        return x_hat, z
+
+
+def train_feature_ae(train_graphs, in_dim, device):
     """
-    For each author, sample up to `per_author` books from that author's
-    training pool (without replacement within the epoch).
-
-    If an author has fewer than `per_author` training books, use all of them.
+    Train a simple MLP autoencoder on node features x from all training graphs.
+    Returns the trained AE model.
     """
-    epoch_indices = []
+    # collect all node features from train graphs
+    xs = []
+    for data in train_graphs:
+        xs.append(data.x)
+    X_all = torch.cat(xs, dim=0)   # shape: (total_nodes_across_train_graphs, in_dim)
 
-    for a, train_ids in author_to_train_indices.items():
-        if len(train_ids) == 0:
-            continue
+    dataset = TensorDataset(X_all)
+    loader = TorchDataLoader(dataset, batch_size=AE_BATCH_SIZE, shuffle=True)
 
-        if len(train_ids) <= per_author:
-            chosen = train_ids
-        else:
-            chosen = rng.choice(train_ids, size=per_author, replace=False).tolist()
+    model = FeatureAE(in_dim, hidden_dim=AE_HIDDEN_DIM, latent_dim=AE_LATENT_DIM).to(device)
+    optimizer = torch.optim.Adam(model.parameters(), lr=AE_LR, weight_decay=1e-4)
+    criterion = nn.MSELoss()
 
-        epoch_indices.extend(chosen)
+    print("\n[AE] Training feature autoencoder on train node features...")
+    model.train()
+    for epoch in range(1, AE_EPOCHS + 1):
+        total_loss = 0.0
+        total_samples = 0
 
-    epoch_indices = np.array(epoch_indices, dtype=int)
-    return epoch_indices
+        for (batch_x,) in loader:
+            batch_x = batch_x.to(device)
+            optimizer.zero_grad()
+            x_hat, _ = model(batch_x)
+            loss = criterion(x_hat, batch_x)
+            loss.backward()
+            optimizer.step()
+
+            total_loss += loss.item() * batch_x.size(0)
+            total_samples += batch_x.size(0)
+
+        avg_loss = total_loss / total_samples if total_samples > 0 else 0.0
+        if epoch % 10 == 0 or epoch == 1 or epoch == AE_EPOCHS:
+            print(f"[AE] Epoch {epoch:03d}/{AE_EPOCHS}  Recon Loss: {avg_loss:.6f}")
+
+    print("[AE] Done training autoencoder.")
+    return model
+
+
+def generate_augmented_graphs(train_graphs, ae_model, device,
+                              n_aug_per_graph=N_AUG_PER_GRAPH,
+                              noise_std=AE_NOISE_STD):
+    """
+    For each real training graph, generate n_aug_per_graph synthetic graphs
+    by encoding node features, adding noise in latent space, decoding back.
+
+    Structure (edge_index) and labels (y) are preserved.
+    Only node features x are perturbed in a learned way.
+    """
+    from torch_geometric.data import Data
+
+    ae_model.eval()
+    aug_graphs = []
+
+    print(f"\n[AE] Generating synthetic graphs: {n_aug_per_graph} per real train graph...")
+    with torch.no_grad():
+        for idx, data in enumerate(train_graphs):
+            x = data.x.to(device)  # (num_nodes, in_dim)
+
+            for _ in range(n_aug_per_graph):
+                # encode
+                _, z = ae_model(x)  # (num_nodes, latent_dim)
+                # add noise
+                z_noisy = z + noise_std * torch.randn_like(z)
+                # decode
+                x_tilde = ae_model.decoder(z_noisy)  # (num_nodes, in_dim)
+
+                # build synthetic Data object
+                new_data = Data(
+                    x=x_tilde.cpu(),
+                    edge_index=data.edge_index.clone(),
+                    y=data.y.clone()
+                )
+                aug_graphs.append(new_data)
+
+    print(f"[AE] Generated {len(aug_graphs)} synthetic graphs.")
+    return aug_graphs
+
 
 # ======================
 # GAT FINGERPRINT PIPELINE
@@ -235,21 +336,17 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     Build book-level fingerprints with GAT, save them,
     and return (Z, y, book_ids, authors, label_encoder).
 
-    NEW SPLIT LOGIC (no leakage):
+    METHOD:
 
-      - For each author, pick exactly ONE fixed test book.
-      - That book is NEVER used in training.
-      - All other books form a TRAIN POOL.
-      - Each epoch:
-          * For each author, sample up to 5 books from that author's TRAIN POOL.
-          * Train on the union of these sampled books.
-      - Test set is fixed across epochs and only used for evaluation.
+      - For each author, pick exactly ONE fixed test book (never used in training).
+      - All other books per author are REAL training books.
+      - Train an autoencoder on node features of REAL training graphs.
+      - Generate synthetic training graphs by perturbing AE latent space.
+      - Train GAT on REAL + SYNTHETIC training graphs.
+      - Evaluate ONLY on REAL held-out test books.
     """
-    import torch
-    import torch.nn as nn
-    import torch.nn.functional as F
     from torch_geometric.data import Data
-    from torch_geometric.loader import DataLoader
+    from torch_geometric.loader import DataLoader as GeoDataLoader
     from torch_geometric.nn import GATConv, global_mean_pool
     from sklearn.preprocessing import LabelEncoder
 
@@ -267,9 +364,6 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     print("\n[PYG] Converting NetworkX graphs to PyG Data objects...")
 
     def nx_to_pyg(G, label_idx):
-        import torch
-        from torch_geometric.data import Data
-
         node_list = list(G.nodes())
         idx_map = {n: i for i, n in enumerate(node_list)}
 
@@ -310,41 +404,26 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     # 3) GAT model with dropout
     class GATGraphClassifier(nn.Module):
         def __init__(self, in_dim, hidden_dim=32, out_dim=64,
-                    heads=4, num_classes=10, dropout=0.6):
+                     heads=4, num_classes=10, dropout=0.6):
             super().__init__()
-            # Layer 1: in_dim -> hidden_dim * heads
             self.gat1 = GATConv(in_dim, hidden_dim, heads=heads, concat=True)
-            # Layer 2: hidden_dim * heads -> out_dim
             self.gat2 = GATConv(hidden_dim * heads, out_dim, heads=1, concat=True)
-            # Layer 3: out_dim -> out_dim (keeps same size for fingerprint)
-            self.gat3 = GATConv(out_dim, out_dim, heads=1, concat=True)
-
             self.classifier = nn.Linear(out_dim, num_classes)
             self.dropout = dropout
 
         def forward(self, x, edge_index, batch):
-            # GAT layer 1
             x = self.gat1(x, edge_index)
             x = F.elu(x)
             x = F.dropout(x, p=self.dropout, training=self.training)
 
-            # GAT layer 2
             x = self.gat2(x, edge_index)
             x = F.elu(x)
             x = F.dropout(x, p=self.dropout, training=self.training)
 
-            # GAT layer 3
-            x = self.gat3(x, edge_index)
-            x = F.elu(x)
-            x = F.dropout(x, p=self.dropout, training=self.training)
-
-            # Graph-level pooling
             x_graph = global_mean_pool(x, batch)  # fingerprint
             logits = self.classifier(x_graph)
             return logits, x_graph
 
-
-    import torch
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = GATGraphClassifier(
         in_dim,
@@ -358,38 +437,35 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     optimizer = torch.optim.Adam(model.parameters(), lr=0.003, weight_decay=1e-4)
     criterion = torch.nn.CrossEntropyLoss()
 
-    # 4) Build a FIXED author-aware split (1 test book per author)
-    train_pool_idx, test_idx, author_to_train_indices = make_fixed_author_split(
+    # 4) Fixed author-aware split (1 test book per author)
+    train_idx, test_idx, _ = make_fixed_author_split(
         authors,
         random_state=42,
         verbose=True
     )
 
-    # fixed test dataset
-    test_dataset = [pyg_data_list[i] for i in test_idx]
-    test_loader_fixed = DataLoader(test_dataset, batch_size=8, shuffle=False)
+    real_train_graphs = [pyg_data_list[i] for i in train_idx]
+    test_dataset      = [pyg_data_list[i] for i in test_idx]
 
-    # RNG for per-epoch sampling
-    epoch_rng = np.random.RandomState(123)
+    # 5) Train autoencoder on node features of REAL training graphs
+    ae_model = train_feature_ae(real_train_graphs, in_dim=in_dim, device=device)
 
-    # 5) Train GAT with PER-EPOCH SAMPLING from TRAIN POOL
+    # 6) Generate synthetic training graphs via AE
+    aug_graphs = generate_augmented_graphs(real_train_graphs, ae_model, device)
+
+    # 7) Final training dataset = real + synthetic
+    train_dataset = real_train_graphs + aug_graphs
+
+    train_loader = GeoDataLoader(train_dataset, batch_size=8, shuffle=True)
+    test_loader  = GeoDataLoader(test_dataset,  batch_size=8, shuffle=False)
+
+    # 8) Train GAT
     EPOCHS = 100
-    print("\n[TRAIN] Starting GAT training with fixed test set "
-          "and per-epoch random sampling of train books...")
+    print("\n[TRAIN] Starting GAT training with AE-augmented training set "
+          "and fixed real test set...")
 
     for epoch in range(1, EPOCHS + 1):
-        # --- sample train books for this epoch (5 per author if possible) ---
-        epoch_train_idx = sample_epoch_train_indices(
-            author_to_train_indices,
-            rng=epoch_rng,
-            per_author=TRAIN_BOOKS_PER_AUTHOR_PER_EPOCH
-        )
-
-        # build dataset/loaders for this epoch
-        train_dataset = [pyg_data_list[i] for i in epoch_train_idx]
-        train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True)
-
-        # --- standard training step ---
+        # --- training ---
         model.train()
         total_loss = 0.0
         correct = 0
@@ -411,12 +487,12 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
         train_loss = total_loss / total if total > 0 else 0.0
         train_acc  = correct / total if total > 0 else 0.0
 
-        # --- evaluation on FIXED test set (1 held-out book per author) ---
+        # --- evaluation on fixed real test set ---
         model.eval()
         correct_t = 0
         total_t = 0
         with torch.no_grad():
-            for batch in test_loader_fixed:
+            for batch in test_loader:
                 batch = batch.to(device)
                 logits, _ = model(batch.x, batch.edge_index, batch.batch)
                 pred = logits.argmax(dim=1)
@@ -428,10 +504,9 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
               f"Train Loss: {train_loss:.4f}  "
               f"Train Acc: {train_acc:.3f}  Test Acc: {test_acc:.3f}")
 
-    # 6) Extract fingerprints for ALL graphs
+    # 9) Extract fingerprints for ALL graphs
     print("\n[EMB] Extracting GAT fingerprints for all graphs...")
-    from torch_geometric.loader import DataLoader as DL_all
-    all_loader = DL_all(pyg_data_list, batch_size=8, shuffle=False)
+    all_loader = GeoDataLoader(pyg_data_list, batch_size=8, shuffle=False)
 
     model.eval()
     Z_list = []
@@ -448,7 +523,7 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     Z = np.concatenate(Z_list, axis=0)
     y_arr = np.concatenate(y_list, axis=0)
 
-    # 7) Save fingerprints
+    # 10) Save fingerprints
     np.save(out_np, Z)
     df_out = pd.DataFrame(Z, columns=[f"emb_{i}" for i in range(Z.shape[1])])
     df_out.insert(0, "book_id", book_ids)
@@ -461,5 +536,5 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
 
 
 if __name__ == "__main__":
-    print("Running GAT fingerprint generation...")
+    print("Running GAT fingerprint generation with AE-augmented training...")
     gat_build_fingerprints()
