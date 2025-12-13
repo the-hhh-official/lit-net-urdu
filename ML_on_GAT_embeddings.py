@@ -26,7 +26,7 @@ AE_LR = 1e-3
 AE_NOISE_STD = 0.10      # noise added in latent space
 N_AUG_PER_REAL = 5       # synthetic samples per real training book
 
-RANDOM_STATE_SPLIT = 42
+RANDOM_STATE_SPLIT = 35
 
 
 # ======================
@@ -49,7 +49,7 @@ def load_fingerprints(path):
 # 2. AUTHOR-AWARE SPLIT
 # ======================
 
-def make_fixed_author_split(authors, random_state=42):
+def make_fixed_author_split(authors, random_state=35):
     rng = np.random.RandomState(random_state)
 
     author_to_indices = defaultdict(list)
