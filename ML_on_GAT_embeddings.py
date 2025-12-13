@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from collections import defaultdict
+import networkx as nx
 
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -11,60 +12,199 @@ from sklearn.metrics import (
     confusion_matrix
 )
 
-import torch
-import torch.nn as nn
-from torch.utils.data import DataLoader, TensorDataset
-
 # ======================
 # CONFIG
 # ======================
 
-FINGERPRINT_CSV = "gat_fingerprints.csv"   # output of pure GAT script
-RANDOM_STATE_SPLIT = 42
+FINGERPRINT_CSV   = "gat_fingerprints.csv"      # from your pure GAT script (64-d emb)
+META_EDGES_PATH   = "books_metadata - w0.csv"   # edges + author + book_id
+META_NODE_PATH    = "features_metadata.csv"     # node features + author + book_id
 
-# Autoencoder hyperparams
-AE_HIDDEN_DIM = 64
-AE_LATENT_DIM = 16
-AE_EPOCHS = 200
-AE_BATCH_SIZE = 16
-AE_LR = 1e-3
-AE_NOISE_STD = 0.10      # noise added in latent space
-N_AUG_PER_REAL = 5       # synthetic samples per real training book
+# Columns
+META0_COL_BOOK_ID   = "book_id"
+META0_COL_EDGES     = "edges_path"
+META0_COL_AUTHOR    = "author"
+
+META5_COL_BOOK_ID   = "book_id"
+META5_COL_NODE_FEAT = "node_features_path"
+META5_COL_AUTHOR    = "author"
+
+NODE_COL_CHAR   = "Character"
+NODE_COL_GENDER = "Gender"
+NODE_COL_ROLE   = "Role"
+
+# Categorical vocab (same as GAT)
+GENDER_CATS = ["Male", "Female", "Unknown"]
+ROLE_CATS   = ["Protagonist", "Antagonist", "Support",
+               "Major-Support", "Narrator", "Minor", "Inactive"]
+
+RANDOM_STATE_SPLIT = 42
 
 
 # ======================
-# 1. LOAD FINGERPRINTS
+# 1. LOAD GAT FINGERPRINTS
 # ======================
 
 def load_fingerprints(path):
-    """
-    Expect a CSV with columns:
-        book_id, author, emb_0, emb_1, ..., emb_{d-1}
-    """
     df = pd.read_csv(path)
     emb_cols = [c for c in df.columns if c.startswith("emb_")]
 
-    X = df[emb_cols].values.astype(np.float32)
+    X_gat = df[emb_cols].values.astype(np.float32)
     authors = df["author"].astype(str).tolist()
     book_ids = df["book_id"].tolist()
 
-    print(f"[LOAD] Loaded {df.shape[0]} books, feature dim = {X.shape[1]}")
-    print(f"[LOAD] Authors: {sorted(set(authors))}")
-    return df, X, authors, book_ids
+    print(f"[GAT] Loaded {df.shape[0]} books, emb_dim = {X_gat.shape[1]}")
+    return df, X_gat, authors, book_ids, emb_cols
 
 
 # ======================
-# 2. AUTHOR-AWARE SPLIT
+# 2. BUILD GRAPHS & POOLED FEATURES
+# ======================
+
+def load_metadata_edges_nodes():
+    meta_edges = pd.read_csv(META_EDGES_PATH)
+    meta_nodes = pd.read_csv(META_NODE_PATH)
+
+    merged = pd.merge(
+        meta_edges[[META0_COL_BOOK_ID, META0_COL_EDGES, META0_COL_AUTHOR]],
+        meta_nodes[[META5_COL_BOOK_ID, META5_COL_NODE_FEAT, META5_COL_AUTHOR]],
+        left_on=[META0_COL_BOOK_ID, META0_COL_AUTHOR],
+        right_on=[META5_COL_BOOK_ID, META5_COL_AUTHOR],
+        how="inner"
+    )
+    print(f"[META] Merged edges + nodes rows: {len(merged)}")
+    return merged
+
+
+def load_node_feature_dict(path):
+    df = pd.read_csv(path)
+    g, r = {}, {}
+    for _, row in df.iterrows():
+        ch = str(row[NODE_COL_CHAR])
+        g[ch] = str(row[NODE_COL_GENDER])
+        r[ch] = str(row[NODE_COL_ROLE])
+    return g, r
+
+
+def compute_semantic_features(gender_dict, role_dict):
+    genders = list(gender_dict.values())
+    roles   = list(role_dict.values())
+
+    total_g = len(genders) if len(genders) > 0 else 1
+    total_r = len(roles)   if len(roles)   > 0 else 1
+
+    gender_props = [genders.count(g) / total_g for g in GENDER_CATS]
+    role_props   = [roles.count(r)   / total_r for r in ROLE_CATS]
+
+    return gender_props + role_props  # len = 3 + 7 = 10
+
+
+def compute_structural_features(G):
+    n = G.number_of_nodes()
+    m = G.number_of_edges()
+
+    if n == 0:
+        return [0.0]*8
+
+    degs = [d for _, d in G.degree()]
+    if len(degs) == 0:
+        degs = [0]
+
+    density      = nx.density(G) if n > 1 else 0.0
+    deg_mean     = float(np.mean(degs))
+    deg_std      = float(np.std(degs))
+    deg_max      = float(np.max(degs))
+    clustering   = float(nx.average_clustering(G)) if m > 0 else 0.0
+    transitivity = float(nx.transitivity(G))       if m > 0 else 0.0
+
+    return [
+        float(n),
+        float(m),
+        density,
+        deg_mean,
+        deg_std,
+        deg_max,
+        clustering,
+        transitivity
+    ]
+
+
+def compute_pooled_features_for_all_books():
+    meta = load_metadata_edges_nodes()
+
+    sem_list = []
+    struct_list = []
+    book_ids = []
+    authors = []
+
+    total = len(meta)
+    print("[FEAT] Computing pooled semantic + structural features...")
+    for i, (_, row) in enumerate(meta.iterrows()):
+        print(f"[FEAT] Book {i+1}/{total}", end="\r")
+
+        edge_path = row[META0_COL_EDGES]
+        node_path = row[META5_COL_NODE_FEAT]
+
+        # build graph
+        df_edges = pd.read_csv(edge_path)
+        gender_dict, role_dict = load_node_feature_dict(node_path)
+
+        G = nx.Graph()
+        for _, erow in df_edges.iterrows():
+            u = str(erow["Character_A"])
+            v = str(erow["Character_B"])
+            w = float(erow["Weight"])
+            if G.has_edge(u, v):
+                G[u][v]["weight"] += w
+            else:
+                G.add_edge(u, v, weight=w)
+
+        # ensure isolated nodes
+        for ch in gender_dict:
+            if ch not in G:
+                G.add_node(ch)
+
+        sem_vec   = compute_semantic_features(gender_dict, role_dict)  # 10
+        struct_vec = compute_structural_features(G)                    # 8
+
+        sem_list.append(sem_vec)
+        struct_list.append(struct_vec)
+        book_ids.append(row[META0_COL_BOOK_ID])
+        authors.append(row[META0_COL_AUTHOR])
+
+    print("\n[FEAT] Done.")
+
+    sem_arr   = np.array(sem_list, dtype=np.float32)
+    struct_arr = np.array(struct_list, dtype=np.float32)
+
+    # Build DataFrame
+    sem_cols = (
+        [f"gender_prop_{g}" for g in GENDER_CATS] +
+        [f"role_prop_{r.replace('-', '_')}" for r in ROLE_CATS]
+    )
+    struct_cols = [
+        "n_nodes", "n_edges", "density",
+        "deg_mean", "deg_std", "deg_max",
+        "clustering", "transitivity"
+    ]
+
+    df_feat = pd.DataFrame({
+        "book_id": book_ids,
+        "author": authors
+    })
+    for j, col in enumerate(sem_cols):
+        df_feat[col] = sem_arr[:, j]
+    for j, col in enumerate(struct_cols):
+        df_feat[col] = struct_arr[:, j]
+
+    return df_feat, sem_cols, struct_cols
+
+
+# ======================
+# 3. AUTHOR-AWARE SPLIT
 # ======================
 
 def make_fixed_author_split(authors, random_state=42, verbose=True):
-    """
-    Fixed author-aware split:
-
-      - For each author:
-          * Randomly choose exactly 1 book as TEST.
-          * All remaining books form TRAIN.
-    """
     rng = np.random.RandomState(random_state)
 
     author_to_indices = defaultdict(list)
@@ -87,8 +227,8 @@ def make_fixed_author_split(authors, random_state=42, verbose=True):
             )
 
         rng.shuffle(idxs)
-        this_test = idxs[0]       # single held-out test book
-        this_train = idxs[1:]     # remaining books
+        this_test = idxs[0]
+        this_train = idxs[1:]
 
         test_idx.append(this_test)
         train_idx.extend(this_train.tolist())
@@ -107,149 +247,62 @@ def make_fixed_author_split(authors, random_state=42, verbose=True):
 
 
 # ======================
-# 3. AUTOENCODER ON FINGERPRINTS
+# 4. SUPERVISED TRAINING ON HYBRID FEATURES
 # ======================
 
-class EmbeddingAE(nn.Module):
-    def __init__(self, in_dim, hidden_dim=64, latent_dim=16):
-        super().__init__()
-        self.encoder = nn.Sequential(
-            nn.Linear(in_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, latent_dim)
-        )
-        self.decoder = nn.Sequential(
-            nn.Linear(latent_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, in_dim)
-        )
+def run_supervised_hybrid():
+    # --- Load GAT fingerprints ---
+    df_gat, X_gat, authors_gat, book_ids_gat, emb_cols = load_fingerprints(FINGERPRINT_CSV)
 
-    def forward(self, x):
-        z = self.encoder(x)
-        x_hat = self.decoder(z)
-        return x_hat, z
+    # --- Compute pooled semantic + structural ---
+    df_feat, sem_cols, struct_cols = compute_pooled_features_for_all_books()
 
+    # --- Merge on book_id + author ---
+    merged = pd.merge(
+        df_gat,
+        df_feat,
+        on=["book_id", "author"],
+        how="inner"
+    )
+    print(f"[MERGE] After merge: {len(merged)} books")
 
-def train_ae_on_embeddings(X_train, input_dim, device):
-    """
-    Train AE on train fingerprints (no test data used).
-    """
-    X_train_t = torch.tensor(X_train, dtype=torch.float32)
-    dataset = TensorDataset(X_train_t)
-    loader = DataLoader(dataset, batch_size=AE_BATCH_SIZE, shuffle=True)
+    # Rebuild arrays after merge
+    authors = merged["author"].astype(str).tolist()
+    book_ids = merged["book_id"].tolist()
 
-    model = EmbeddingAE(input_dim, hidden_dim=AE_HIDDEN_DIM, latent_dim=AE_LATENT_DIM).to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=AE_LR, weight_decay=1e-4)
-    criterion = nn.MSELoss()
+    # GAT part
+    emb_cols_merged = [c for c in merged.columns if c.startswith("emb_")]
+    X_gat_m = merged[emb_cols_merged].values.astype(np.float32)
 
-    print("\n[AE] Training autoencoder on train fingerprints...")
-    model.train()
-    for epoch in range(1, AE_EPOCHS + 1):
-        total_loss = 0.0
-        total_samples = 0
+    # pooled features
+    feat_cols = sem_cols + struct_cols
+    X_pooled = merged[feat_cols].values.astype(np.float32)
 
-        for (batch_x,) in loader:
-            batch_x = batch_x.to(device)
-            optimizer.zero_grad()
-            x_hat, _ = model(batch_x)
-            loss = criterion(x_hat, batch_x)
-            loss.backward()
-            optimizer.step()
+    # hybrid concat
+    X_hybrid = np.concatenate([X_gat_m, X_pooled], axis=1)
+    print(f"[MERGE] GAT dims: {X_gat_m.shape[1]}  pooled dims: {X_pooled.shape[1]}  hybrid: {X_hybrid.shape[1]}")
 
-            total_loss += loss.item() * batch_x.size(0)
-            total_samples += batch_x.size(0)
-
-        avg_loss = total_loss / total_samples if total_samples > 0 else 0.0
-        if epoch % 20 == 0 or epoch == 1 or epoch == AE_EPOCHS:
-            print(f"[AE] Epoch {epoch:03d}/{AE_EPOCHS}  Recon Loss: {avg_loss:.6f}")
-
-    print("[AE] Done training autoencoder.")
-    return model
-
-
-def generate_augmented_embeddings(X_train, y_train,
-                                  ae_model,
-                                  device,
-                                  n_aug_per_real=N_AUG_PER_REAL,
-                                  noise_std=AE_NOISE_STD):
-    """
-    Use AE to generate synthetic embeddings around each real train embedding.
-    """
-    ae_model.eval()
-    X_syn_list = []
-    y_syn_list = []
-
-    X_train_t = torch.tensor(X_train, dtype=torch.float32).to(device)
-
-    print(f"\n[AE] Generating synthetic embeddings: "
-          f"{n_aug_per_real} per real train sample...")
-
-    with torch.no_grad():
-        for i in range(X_train.shape[0]):
-            x = X_train_t[i:i+1]  # shape (1, d)
-
-            for _ in range(n_aug_per_real):
-                # encode
-                _, z = ae_model(x)      # (1, latent_dim)
-                # add noise
-                z_noisy = z + noise_std * torch.randn_like(z)
-                # decode
-                x_tilde = ae_model.decoder(z_noisy)  # (1, d)
-
-                X_syn_list.append(x_tilde.cpu().numpy()[0])
-                y_syn_list.append(y_train[i])
-
-    X_syn = np.stack(X_syn_list, axis=0)
-    y_syn = np.array(y_syn_list)
-
-    print(f"[AE] Generated {X_syn.shape[0]} synthetic embeddings.")
-    return X_syn, y_syn
-
-
-# ======================
-# 4. SUPERVISED TRAINING WITH AE-AUGMENTED TRAINING SET
-# ======================
-
-def run_supervised_with_ae(X, authors, book_ids):
-    # Label encode
+    # Label encoding
     le = LabelEncoder()
     y = le.fit_transform(authors)
     class_names = le.classes_
 
-    # Split
+    # Author-aware split
     train_idx, test_idx = make_fixed_author_split(authors, random_state=RANDOM_STATE_SPLIT)
 
-    X_train, X_test = X[train_idx], X[test_idx]
+    X_train, X_test = X_hybrid[train_idx], X_hybrid[test_idx]
     y_train, y_test = y[train_idx], y[test_idx]
 
     print("[DATA] Train shape:", X_train.shape, " Test shape:", X_test.shape)
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-    # --- Train AE on train fingerprints only ---
-    ae_model = train_ae_on_embeddings(X_train, input_dim=X_train.shape[1], device=device)
-
-    # --- Generate synthetic train embeddings ---
-    X_syn, y_syn = generate_augmented_embeddings(
-        X_train, y_train, ae_model, device,
-        n_aug_per_real=N_AUG_PER_REAL, noise_std=AE_NOISE_STD
-    )
-
-    # Combine real + synthetic for training
-    X_train_aug = np.concatenate([X_train, X_syn], axis=0)
-    y_train_aug = np.concatenate([y_train, y_syn], axis=0)
-
-    print(f"[AE] Augmented train shape: {X_train_aug.shape} "
-          f"(real={X_train.shape[0]}, synthetic={X_syn.shape[0]})")
-
     # ---------------------------
     # 4.1 Logistic Regression
     # ---------------------------
-    print("\n=== Logistic Regression with AE-augmented training ===")
+    print("\n=== Logistic Regression on HYBRID (GAT + pooled semantic + structural) ===")
 
     scaler = StandardScaler()
-    X_train_aug_scaled = scaler.fit_transform(X_train_aug)
-    X_test_scaled = scaler.transform(X_test)
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled  = scaler.transform(X_test)
 
     logreg = LogisticRegression(
         multi_class="multinomial",
@@ -257,12 +310,12 @@ def run_supervised_with_ae(X, authors, book_ids):
         solver="lbfgs",
         random_state=0
     )
-    logreg.fit(X_train_aug_scaled, y_train_aug)
+    logreg.fit(X_train_scaled, y_train)
 
-    y_train_pred = logreg.predict(X_train_aug_scaled)
-    y_test_pred = logreg.predict(X_test_scaled)
+    y_train_pred = logreg.predict(X_train_scaled)
+    y_test_pred  = logreg.predict(X_test_scaled)
 
-    print(f"[LOGREG] Train accuracy: {accuracy_score(y_train_aug, y_train_pred):.3f}")
+    print(f"[LOGREG] Train accuracy: {accuracy_score(y_train, y_train_pred):.3f}")
     print(f"[LOGREG] Test  accuracy: {accuracy_score(y_test, y_test_pred):.3f}")
     print("\n[LOGREG] Classification report (test):")
     print(classification_report(y_test, y_test_pred, target_names=class_names))
@@ -274,7 +327,7 @@ def run_supervised_with_ae(X, authors, book_ids):
     # ---------------------------
     # 4.2 Random Forest
     # ---------------------------
-    print("\n=== Random Forest with AE-augmented training ===")
+    print("\n=== Random Forest on HYBRID (GAT + pooled semantic + structural) ===")
 
     rf = RandomForestClassifier(
         n_estimators=300,
@@ -282,12 +335,12 @@ def run_supervised_with_ae(X, authors, book_ids):
         random_state=0,
         n_jobs=-1
     )
-    rf.fit(X_train_aug, y_train_aug)
+    rf.fit(X_train, y_train)
 
-    y_train_pred_rf = rf.predict(X_train_aug)
-    y_test_pred_rf = rf.predict(X_test)
+    y_train_pred_rf = rf.predict(X_train)
+    y_test_pred_rf  = rf.predict(X_test)
 
-    print(f"[RF] Train accuracy: {accuracy_score(y_train_aug, y_train_pred_rf):.3f}")
+    print(f"[RF] Train accuracy: {accuracy_score(y_train, y_train_pred_rf):.3f}")
     print(f"[RF] Test  accuracy: {accuracy_score(y_test, y_test_pred_rf):.3f}")
     print("\n[RF] Classification report (test):")
     print(classification_report(y_test, y_test_pred_rf, target_names=class_names))
@@ -302,6 +355,5 @@ def run_supervised_with_ae(X, authors, book_ids):
 # ======================
 
 if __name__ == "__main__":
-    print("=== Supervised ML on GAT fingerprints with AE-augmented training ===")
-    df, X, authors, book_ids = load_fingerprints(FINGERPRINT_CSV)
-    run_supervised_with_ae(X, authors, book_ids)
+    print("=== Hybrid Supervised ML: GAT fingerprints + pooled semantic + structural (no titles) ===")
+    run_supervised_hybrid()
