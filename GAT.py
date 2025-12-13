@@ -262,8 +262,8 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     np.random.seed(42)
 
     # 1) Load metadata and graphs
-    meta, book_ids, edge_paths, node_paths, authors = load_metadata()
-    counts, min_books = print_author_stats(authors)
+    _, book_ids, edge_paths, node_paths, authors = load_metadata()
+    _, _ = print_author_stats(authors)
 
     graphs = build_all_graphs(edge_paths, node_paths)
 
@@ -450,5 +450,5 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
 
 
 if __name__ == "__main__":
-    print("Running GAT fingerprint generation (only GAT, no AE, no extra features)...")
+    print("Running GAT fingerprint generation (only GAT, no AE)...")
     gat_build_fingerprints()
