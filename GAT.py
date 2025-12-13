@@ -148,7 +148,7 @@ def print_author_stats(authors):
               "The 'min_books - 1' train rule will fail.")
     return counts, min_books
 
-def make_author_split(authors, random_state=42):
+def make_author_split(authors, random_state=42, verbose=False):
     """
     Build train/test indices such that:
       - For each author with k books:
@@ -172,8 +172,10 @@ def make_author_split(authors, random_state=42):
         )
 
     train_per_author = min_books - 1
-    print(f"\n[SPLIT] Using author-aware split:")
-    print(f"        train_per_author = min_books - 1 = {train_per_author}")
+
+    if verbose:
+        print(f"\n[SPLIT] Using author-aware split (random_state={random_state}):")
+        print(f"        train_per_author = min_books - 1 = {train_per_author}")
 
     train_idx = []
     test_idx  = []
@@ -185,14 +187,16 @@ def make_author_split(authors, random_state=42):
         this_test  = idxs[train_per_author:]
         train_idx.extend(this_train)
         test_idx.extend(this_test)
-        print(f"        Author '{a}': "
-              f"train {len(this_train)} books, test {len(this_test)} books")
+        if verbose:
+            print(f"        Author '{a}': "
+                  f"train {len(this_train)} books, test {len(this_test)} books")
 
     train_idx = np.array(sorted(train_idx))
     test_idx  = np.array(sorted(test_idx))
 
-    print(f"[SPLIT] Total train graphs: {len(train_idx)}")
-    print(f"[SPLIT] Total test  graphs: {len(test_idx)}\n")
+    if verbose:
+        print(f"[SPLIT] Total train graphs: {len(train_idx)}")
+        print(f"[SPLIT] Total test  graphs: {len(test_idx)}\n")
 
     return train_idx, test_idx
 
@@ -205,6 +209,9 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     """
     Build book-level fingerprints with GAT, save them,
     and return (Z, y, book_ids, authors, label_encoder).
+
+    NOTE: During training, train/test split is resampled
+    at every epoch (author-aware random split).
     """
     import torch
     import torch.nn as nn
@@ -264,19 +271,10 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
         pyg_data_list.append(nx_to_pyg(G, y[i]))
     print(f"\n[PYG] Done. Built {len(pyg_data_list)} PyG graphs.")
 
-    # 3) Author-aware train / test split
-    train_idx, test_idx = make_author_split(authors, random_state=42)
-
-    train_dataset = [pyg_data_list[i] for i in train_idx]
-    test_dataset  = [pyg_data_list[i] for i in test_idx]
-
-    train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True)
-    test_loader  = DataLoader(test_dataset,  batch_size=8, shuffle=False)
-
     in_dim = pyg_data_list[0].x.shape[1]
     num_classes = len(label_encoder.classes_)
 
-    # 4) GAT model with dropout
+    # 3) GAT model with dropout
     class GATGraphClassifier(nn.Module):
         def __init__(self, in_dim, hidden_dim=32, out_dim=64,
                      heads=4, num_classes=10, dropout=0.6):
@@ -288,17 +286,18 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
 
         def forward(self, x, edge_index, batch):
             x = self.gat1(x, edge_index)
-            x = nn.functional.elu(x)
-            x = nn.functional.dropout(x, p=self.dropout, training=self.training)
+            x = F.elu(x)
+            x = F.dropout(x, p=self.dropout, training=self.training)
 
             x = self.gat2(x, edge_index)
-            x = nn.functional.elu(x)
-            x = nn.functional.dropout(x, p=self.dropout, training=self.training)
+            x = F.elu(x)
+            x = F.dropout(x, p=self.dropout, training=self.training)
 
             x_graph = global_mean_pool(x, batch)  # fingerprint
             logits = self.classifier(x_graph)
             return logits, x_graph
 
+    import torch
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = GATGraphClassifier(
         in_dim,
@@ -310,12 +309,27 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     ).to(device)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=0.003, weight_decay=1e-4)
-    criterion = nn.CrossEntropyLoss()
+    criterion = torch.nn.CrossEntropyLoss()
 
-    # 5) Train GAT as graph classifier
+    # 4) Train GAT with RANDOM SPLIT EACH EPOCH
     EPOCHS = 100
-    print("\n[TRAIN] Starting GAT training...")
+    print("\n[TRAIN] Starting GAT training with per-epoch random splits...")
     for epoch in range(1, EPOCHS + 1):
+        # --- resample split (different random_state each epoch) ---
+        train_idx, test_idx = make_author_split(
+            authors,
+            random_state=42 + epoch,      # different seed → different split
+            verbose=(epoch == 1)          # show full details only for epoch 1
+        )
+
+        from torch_geometric.loader import DataLoader
+        train_dataset = [pyg_data_list[i] for i in train_idx]
+        test_dataset  = [pyg_data_list[i] for i in test_idx]
+
+        train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True)
+        test_loader  = DataLoader(test_dataset,  batch_size=8, shuffle=False)
+
+        # --- standard training step ---
         model.train()
         total_loss = 0.0
         correct = 0
@@ -337,7 +351,7 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
         train_loss = total_loss / total if total > 0 else 0.0
         train_acc  = correct / total if total > 0 else 0.0
 
-        # quick test accuracy
+        # quick test accuracy on *this epoch's* random test split
         model.eval()
         correct_t = 0
         total_t = 0
@@ -350,17 +364,16 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
                 total_t   += batch.num_graphs
         test_acc = correct_t / total_t if total_t > 0 else 0.0
         
-        # print every epoch so screen is always updating
         print(f"[TRAIN] Epoch {epoch:03d}/{EPOCHS}  "
               f"Train Loss: {train_loss:.4f}  "
               f"Train Acc: {train_acc:.3f}  Test Acc: {test_acc:.3f}")
 
-    # 6) Extract fingerprints for ALL graphs
+    # 5) Extract fingerprints for ALL graphs
     print("\n[EMB] Extracting GAT fingerprints for all graphs...")
-    model.eval()
     from torch_geometric.loader import DataLoader as DL_all
     all_loader = DL_all(pyg_data_list, batch_size=8, shuffle=False)
 
+    model.eval()
     Z_list = []
     y_list = []
     for i, batch in enumerate(all_loader):
@@ -375,7 +388,7 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     Z = np.concatenate(Z_list, axis=0)
     y_arr = np.concatenate(y_list, axis=0)
 
-    # 7) Save fingerprints
+    # 6) Save fingerprints
     np.save(out_np, Z)
     df_out = pd.DataFrame(Z, columns=[f"emb_{i}" for i in range(Z.shape[1])])
     df_out.insert(0, "book_id", book_ids)
