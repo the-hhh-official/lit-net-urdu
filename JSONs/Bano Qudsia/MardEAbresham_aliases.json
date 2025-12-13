@@ -1,0 +1,106 @@
+{
+  "شہاب": {
+    "aliases": ["شہاب بھائی", "قدرت اللہ شہاب", "شہاب صاحب"],
+    "active": true
+  },
+  "قدسیہ": {
+    "aliases": ["قدسیہ جات", "قدسیہ بی بی", "قدسیہ صاحبہ"],
+    "active": true
+  },
+  "بانو": {
+    "aliases": ["بانو قدسیہ", "بانو صاحبہ"],
+    "active": true
+  },
+  "اشفاق": {
+    "aliases": ["اشفاق احمد", "اشفاق صاحب"],
+    "active": true
+  },
+  "ممتاز مفتی": {
+    "aliases": ["مفتی", "ممتاز مفتی صاحب", "مفتی صاحب"],
+    "active": true
+  },
+  "عکسی": {
+    "aliases": ["عکسی مفتی", "عکسی صاحب"],
+    "active": true
+  },
+  "انیق": {
+    "aliases": ["انیق خان", "انیق صاحب"],
+    "active": true
+  },
+  "ثاقب": {
+    "aliases": ["ثاقب شہاب", "ثاقب صاحب"],
+    "active": true
+  },
+  "فیض": {
+    "aliases": ["فیض صاحب", "فیض احمد"],
+    "active": false
+  },
+  "سلیم": {
+    "aliases": [],
+    "active": false
+  },
+  "مرزا": {
+    "aliases": ["مرزا صاحب"],
+    "active": false
+  },
+  "خانی": {
+    "aliases": [],
+    "active": false
+  },
+  "ملکہ": {
+    "aliases": ["ملکہ پکھراج"],
+    "active": false
+  },
+  "عفت": {
+    "aliases": ["عفت صاحبہ"],
+    "active": true
+  },
+  "نسرین": {
+    "aliases": [],
+    "active": false
+  },
+  "محمودہ جی": {
+    "aliases": ["محمودہ صاحبہ"],
+    "active": true
+  },
+  "خانسامہ": {
+    "aliases": [],
+    "active": false
+  },
+  "گڈی": {
+    "aliases": [],
+    "active": false
+  },
+  "انشاء": {
+    "aliases": ["انشاء صاحب"],
+    "active": true
+  },
+  "محمودہ": {
+    "aliases": ["محمودہ صاحبہ"],
+    "active": true
+  },
+  "اثیر": {
+    "aliases": ["اثیر خاں"],
+    "active": true
+  },
+  "یوگی": {
+    "aliases": ["یوگی اشفاق"],
+    "active": true
+  },
+  "قاسم": {
+    "aliases": [],
+    "active": false
+  },
+  "غزل": {
+    "aliases": [],
+    "active": false
+  },
+  "شاہد افضل": {
+    "aliases": [],
+    "active": false
+  },
+  "نینی": {
+    "aliases": [],
+    "active": false
+  }
+}

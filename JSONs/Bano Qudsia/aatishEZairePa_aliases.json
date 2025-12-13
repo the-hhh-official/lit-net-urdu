@@ -1,0 +1,318 @@
+{
+  "ذی شان": {
+    "aliases": ["ذیشان", "زی شان", "زی"],
+    "active": true
+  },
+  "آزاد": {
+    "aliases": ["آزاد", "آزاد صاحبہ", "آزاد بی بی"],
+    "active": true
+  },
+  "آراد": {
+    "aliases": ["آراد", "آراد بی بی", "آراد محترمہ"],
+    "active": true
+  },
+  "ماموں": {
+    "aliases": ["ماموں", "ماموں صاحب"],
+    "active": false
+  },
+  "عابدہ": {
+    "aliases": ["عابدہ", "عابدہ بی بی"],
+    "active": true
+  },
+  "جمیلہ": {
+    "aliases": ["جمیلہ"],
+    "active": true
+  },
+  "خالہ سکینہ": {
+    "aliases": ["خالہ سکینہ", "خالہ", "سکینہ خالہ"],
+    "active": true
+  },
+  "زینب": {
+    "aliases": ["زینب", "زینب آپا"],
+    "active": true
+  },
+  "باجی": {
+    "aliases": ["باجی", "باجی محترمہ"],
+    "active": true
+  },
+  "تہمینہ": {
+    "aliases": ["تہمینہ", "تہمینہ بی بی"],
+    "active": true
+  },
+  "یوسف بھائی": {
+    "aliases": ["یوسف بھائی", "یوسف", "یوسف صاحب"],
+    "active": true
+  },
+  "اعجاز": {
+    "aliases": ["اعجاز", "اعجاز بھائی"],
+    "active": true
+  },
+  "فواد": {
+    "aliases": ["فواد", "فواد بھائی"],
+    "active": true
+  },
+  "عائلہ": {
+    "aliases": ["عائلہ", "عائلہ بی بی", "عائلہ محترمہ"],
+    "active": true
+  },
+  "زارا": {
+    "aliases": ["زارا", "زارا بی بی"],
+    "active": true
+  },
+  "عصمت": {
+    "aliases": ["عصمت", "عصمت محترمہ"],
+    "active": true
+  },
+  "زبیر احمد": {
+    "aliases": ["زبیر احمد", "زبیر"],
+    "active": true
+  },
+  "سعیدہ": {
+    "aliases": ["سعیدہ", "سعیدہ بی بی"],
+    "active": true
+  },
+  "زریں": {
+    "aliases": ["زریں"],
+    "active": true
+  },
+  "شبانہ": {
+    "aliases": ["شبانہ", "شبانہ بی بی"],
+    "active": true
+  },
+  "مختار": {
+    "aliases": ["مختار", "مختار صاحب"],
+    "active": false
+  },
+  "مہر دین": {
+    "aliases": ["مہر دین", "مہر دین صاحب"],
+    "active": false
+  },
+  "دمہ": {
+    "aliases": ["دمہ", "دمہ محترمہ"],
+    "active": false
+  },
+  "آصفہ حیدری": {
+    "aliases": ["آصفہ حیدری", "آصفہ"],
+    "active": false
+  },
+  "ابراہیم": {
+    "aliases": ["ابراہیم", "ابراہیم صاحب"],
+    "active": true
+  },
+  "منا": {
+    "aliases": ["منا", "منا بچہ"],
+    "active": false
+  },
+  "دلہن": {
+    "aliases": ["دلہن", "دلہن بی بی"],
+    "active": false
+  },
+  "بیوی": {
+    "aliases": ["بیوی", "بیوی محترمہ"],
+    "active": false
+  },
+  "پولی": {
+    "aliases": ["پولی"],
+    "active": true
+  },
+  "مقصود": {
+    "aliases": ["مقصود"],
+    "active": true
+  },
+  "راجو": {
+    "aliases": ["راجو"],
+    "active": true
+  },
+  "بیگم صاحبہ": {
+    "aliases": ["بیگم صاحبہ"],
+    "active": true
+  },
+  "نواب صاحب": {
+    "aliases": ["نواب صاحب"],
+    "active": true
+  },
+  "نسیم بانو": {
+    "aliases": ["نسیم بانو"],
+    "active": true
+  },
+  "شکیلہ": {
+    "aliases": ["شکیلہ"],
+    "active": false
+  },
+  "رشیدہ بائی": {
+    "aliases": ["رشیدہ بائی"],
+    "active": false
+  },
+  "سائیں": {
+    "aliases": ["سائیں"],
+    "active": false
+  },
+  "آپی": {
+    "aliases": ["آپی"],
+    "active": false
+  },
+  "سگرٹ": {
+    "aliases": ["سگرٹ"],
+    "active": false
+  },
+  "نظریں": {
+    "aliases": ["نظریں"],
+    "active": false
+  },
+  "گورمکھی": {
+    "aliases": ["گورمکھی"],
+    "active": false
+  },
+  "سرجیت": {
+    "aliases": ["سرجیت"],
+    "active": false
+  },
+  "فیروز": {
+    "aliases": ["فیروز"],
+    "active": false
+  },
+  "زرین": {
+    "aliases": ["زرین"],
+    "active": false
+  },
+  "جالری": {
+    "aliases": ["جالری"],
+    "active": false
+  },
+  "سیاہ زنگ": {
+    "aliases": ["سیاہ زنگ"],
+    "active": false
+  },
+  "فراموش": {
+    "aliases": ["فراموش"],
+    "active": false
+  },
+  "شائستہ": {
+    "aliases": ["شائستہ"],
+    "active": true
+  },
+  "لطیف صاحب": {
+    "aliases": ["لطیف صاحب"],
+    "active": true
+  },
+  "فائزہ": {
+    "aliases": ["فائزہ"],
+    "active": true
+  },
+  "مرزا صاحب": {
+    "aliases": ["مرزا صاحب"],
+    "active": true
+  },
+  "فاراں سعید": {
+    "aliases": ["فاراں سعید"],
+    "active": true
+  },
+  "قمر زبیری": {
+    "aliases": ["قمر زبیری"],
+    "active": true
+  },
+  "حمیرا": {
+    "aliases": ["حمیرا"],
+    "active": true
+  },
+  "سنتو جمعدارنی": {
+    "aliases": ["سنتو جمعدارنی"],
+    "active": true
+  },
+  "خورشید": {
+    "aliases": ["خورشید"],
+    "active": true
+  },
+  "نائیجل": {
+    "aliases": ["نائیجل"],
+    "active": true
+  },
+  "روزی": {
+    "aliases": ["روزی"],
+    "active": true
+  },
+  "انیلا": {
+    "aliases": ["انیلا"],
+    "active": true
+  },
+  "گلاب دین": {
+    "aliases": ["گلاب دین"],
+    "active": true
+  },
+  "پروفیسر فخر": {
+    "aliases": ["پروفیسر فخر"],
+    "active": true
+  },
+  "صوفیہ": {
+    "aliases": ["صوفیہ"],
+    "active": true
+  },
+  "قیصر": {
+    "aliases": ["قیصر"],
+    "active": true
+  },
+  "یاسمین": {
+    "aliases": ["یاسمین"],
+    "active": true
+  },
+  "منی": {
+    "aliases": ["منی"],
+    "active": true
+  },
+  "جمالی ملک": {
+    "aliases": ["جمالی ملک"],
+    "active": true
+  },
+  "نیاز": {
+    "aliases": ["نیاز"],
+    "active": true
+  },
+  "پیا": {
+    "aliases": ["پیا"],
+    "active": true
+  },
+  "نعیم": {
+    "aliases": ["نعیم"],
+    "active": true
+  },
+  "آمنہ": {
+    "aliases": ["آمنہ"],
+    "active": true
+  },
+  "ملک آصف": {
+    "aliases": ["ملک آصف"],
+    "active": true
+  },
+  "گل رخ": {
+    "aliases": ["گل رخ"],
+    "active": true
+  },
+  "پارو بہو": {
+    "aliases": ["پارو بہو"],
+    "active": true
+  },
+  "شہتوت رنگی": {
+    "aliases": ["شہتوت رنگی"],
+    "active": true
+  },
+  "گیتو": {
+    "aliases": ["گیتو"],
+    "active": true
+  },
+  "نور افشاں": {
+    "aliases": ["نور افشاں"],
+    "active": true
+  },
+  "ماجد": {
+    "aliases": ["ماجد"],
+    "active": true
+  },
+  "ملکانی": {
+    "aliases": ["ملکانی"],
+    "active": true
+  },
+  "متنی": {
+    "aliases": ["متنی"],
+    "active": true
+  }
+}

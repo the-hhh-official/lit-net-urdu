@@ -1,0 +1,70 @@
+{
+  "معظم": {
+    "aliases": ["مجو", "مجو بھائی"],
+    "active": true
+  },
+  "زرقا": {
+    "aliases": ["زرقا آپا", "زرقا بی بی"],
+    "active": true
+  },
+  "انور": {
+    "aliases": ["انور بھائی"],
+    "active": true
+  },
+  "حبیب مرزا": {
+    "aliases": ["حبیب بھائی", "جبیب مرزا"],
+    "active": true
+  },
+  "لیلی": {
+    "aliases": ["لیلی باجی", "لیلی بیگم"],
+    "active": true
+  },
+  "شیریں": {
+    "aliases": ["شیریں باجی"],
+    "active": true
+  },
+  "رانی": {
+    "aliases": ["رانی"],
+    "active": false
+  },
+  "گلو": {
+    "aliases": ["گلو"],
+    "active": false
+  },
+  "ملکہ": {
+    "aliases": ["ملکہ صاحبہ"],
+    "active": false
+  },
+  "جبیب مرزا": {
+    "aliases": ["جبیب مرزا"],
+    "active": false
+  },
+  "لیلیٰ": {
+    "aliases": ["لیلیٰ"],
+    "active": false
+  },
+  "زکی": {
+    "aliases": ["زکی آپا"],
+    "active": false
+  },
+  "لالو": {
+    "aliases": ["لالو"],
+    "active": false
+  },
+  "اماں": {
+    "aliases": ["اماں جی"],
+    "active": false
+  },
+  "لگوا": {
+    "aliases": ["لگوا"],
+    "active": false
+  },
+  "تجو": {
+    "aliases": ["تجو"],
+    "active": false
+  },
+  "رکھتی": {
+    "aliases": ["رکھتی"],
+    "active": false
+  }
+}
