@@ -17,9 +17,9 @@ META0_COL_EDGES   = "edges_path"
 META0_COL_AUTHOR  = "author"
 
 # columns in node-features metadata
-META5_COL_BOOK_ID    = "book_id"
-META5_COL_AUTHOR     = "author"
-META5_COL_NODE_FEAT  = "node_features_path"
+FEATURE_COL_BOOK_ID    = "book_id"
+FEATURE_COL_AUTHOR     = "author"
+FEATURE_COL_NODE_FEAT  = "node_features_path"
 
 NODE_COL_CHAR   = "Character"
 NODE_COL_GENDER = "Gender"
@@ -65,9 +65,9 @@ def load_metadata():
 
     merged = pd.merge(
         meta_edges[[META0_COL_BOOK_ID, META0_COL_EDGES, META0_COL_AUTHOR]],
-        meta_nodes[[META5_COL_BOOK_ID, META5_COL_NODE_FEAT, META5_COL_AUTHOR]],
+        meta_nodes[[FEATURE_COL_BOOK_ID, FEATURE_COL_NODE_FEAT, FEATURE_COL_AUTHOR]],
         left_on=[META0_COL_BOOK_ID, META0_COL_AUTHOR],
-        right_on=[META5_COL_BOOK_ID, META5_COL_AUTHOR],
+        right_on=[FEATURE_COL_BOOK_ID, FEATURE_COL_AUTHOR],
         how="inner"
     )
 
@@ -77,7 +77,7 @@ def load_metadata():
 
     book_ids   = merged[META0_COL_BOOK_ID].tolist()
     edge_paths = merged[META0_COL_EDGES].tolist()
-    node_paths = merged[META5_COL_NODE_FEAT].tolist()
+    node_paths = merged[FEATURE_COL_NODE_FEAT].tolist()
     authors    = merged[META0_COL_AUTHOR].tolist()
 
     return merged, book_ids, edge_paths, node_paths, authors
