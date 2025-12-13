@@ -310,25 +310,39 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     # 3) GAT model with dropout
     class GATGraphClassifier(nn.Module):
         def __init__(self, in_dim, hidden_dim=32, out_dim=64,
-                     heads=4, num_classes=10, dropout=0.6):
+                    heads=4, num_classes=10, dropout=0.6):
             super().__init__()
+            # Layer 1: in_dim -> hidden_dim * heads
             self.gat1 = GATConv(in_dim, hidden_dim, heads=heads, concat=True)
+            # Layer 2: hidden_dim * heads -> out_dim
             self.gat2 = GATConv(hidden_dim * heads, out_dim, heads=1, concat=True)
+            # Layer 3: out_dim -> out_dim (keeps same size for fingerprint)
+            self.gat3 = GATConv(out_dim, out_dim, heads=1, concat=True)
+
             self.classifier = nn.Linear(out_dim, num_classes)
             self.dropout = dropout
 
         def forward(self, x, edge_index, batch):
+            # GAT layer 1
             x = self.gat1(x, edge_index)
             x = F.elu(x)
             x = F.dropout(x, p=self.dropout, training=self.training)
 
+            # GAT layer 2
             x = self.gat2(x, edge_index)
             x = F.elu(x)
             x = F.dropout(x, p=self.dropout, training=self.training)
 
+            # GAT layer 3
+            x = self.gat3(x, edge_index)
+            x = F.elu(x)
+            x = F.dropout(x, p=self.dropout, training=self.training)
+
+            # Graph-level pooling
             x_graph = global_mean_pool(x, batch)  # fingerprint
             logits = self.classifier(x_graph)
             return logits, x_graph
+
 
     import torch
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -359,7 +373,7 @@ def gat_build_fingerprints(out_np="gat_fingerprints.npy",
     epoch_rng = np.random.RandomState(123)
 
     # 5) Train GAT with PER-EPOCH SAMPLING from TRAIN POOL
-    EPOCHS = 50
+    EPOCHS = 100
     print("\n[TRAIN] Starting GAT training with fixed test set "
           "and per-epoch random sampling of train books...")
 
